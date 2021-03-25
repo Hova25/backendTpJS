@@ -7,11 +7,29 @@ module.exports = class ItemDao extends BaseDAO {
 
     insert(item){
         return new Promise(((resolve, reject) => {
-            this.db.query(`INSERT INTO item(id_list,label,quantity,checked) VALUES ($1,$2,$3,$4) RETURNING id`,
+            this.db.query(`INSERT INTO ${this.tablename}(id_list,label,quantity,checked) VALUES ($1,$2,$3,$4) RETURNING id`,
                 [item.id_list, item.label, item.quantity, item.checked])
                 .then(res => resolve(res.rows[0].id))
                 .catch(err => reject(err))
         }))
+    }
+
+    update(item){
+        return this.db.query(`UPDATE ${this.tablename} SET id_list=$1,label=$2,quantity=$3,checked=$4 WHERE id=$5`,
+            [item.id_list, item.label, item.quantity, item.checked, item.id])
+    }
+
+    async updateCheck(id){
+        const item = await this.getById(id)
+        if(item!==undefined){
+            if(item.checked===true) {
+                return this.db.query(`UPDATE ${this.tablename} SET checked=false WHERE id=$1 `,
+                    [id])
+            }else{
+                return this.db.query(`UPDATE ${this.tablename} SET checked=true WHERE id=$1 `,
+                    [id])
+            }
+        }
     }
 
 }
