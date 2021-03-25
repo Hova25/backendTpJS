@@ -7,14 +7,14 @@ module.exports = class ListDao extends BaseDAO {
 
     getAllNoArchived(){
         return new Promise(((resolve, reject) => {
-            this.db.query(`SELECT * from ${this.tablename} WHERE archived = false`)
+            this.db.query(`SELECT * from ${this.tablename} WHERE archived = false ORDER BY id DESC`)
                 .then(res=>resolve(res.rows))
                 .catch(err=> reject(err))
         }))
     }
     getAllArchived(){
         return new Promise(((resolve, reject) => {
-            this.db.query(`SELECT * from ${this.tablename} WHERE archived = true`)
+            this.db.query(`SELECT * from ${this.tablename} WHERE archived = true ORDER BY id DESC`)
                 .then(res=>resolve(res.rows))
                 .catch(err=> reject(err))
         }))
@@ -37,9 +37,13 @@ module.exports = class ListDao extends BaseDAO {
         return this.db.query(`UPDATE ${this.tablename} SET archived=true WHERE id=$1 `,
             [id])
     }
+    dearchived(id){
+        return this.db.query(`UPDATE ${this.tablename} SET archived=false WHERE id=$1 `,
+            [id])
+    }
 
-    delete(id){
-        this.db.query(`DELETE FROM item WHERE id_list=$1`, [id])
+    async delete(id){
+        await this.db.query(`DELETE FROM item WHERE id_list=$1`, [id])
         return this.db.query(`DELETE FROM ${this.tablename} WHERE id=$1`, [id])
     }
 

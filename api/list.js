@@ -73,6 +73,19 @@ module.exports = (app, service) => {
             res.status(400).end()
         }
     })
+    app.patch("/list/no_archive/:id", async (req, res) => {
+        try{
+            service.dao.dearchived(req.params.id)
+                .then(res.status(200).end())
+                .catch(err => {
+                    console.log(err)
+                    res.status(500).end()
+                })
+        }catch (err) {
+            console.log(err)
+            res.status(400).end()
+        }
+    })
 
 
     app.delete("/list/:id", async (req, res) => {
