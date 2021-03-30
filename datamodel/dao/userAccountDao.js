@@ -6,7 +6,7 @@ module.exports = class UserAccountDAO extends BaseDAO{
     }
     insert(useraccount){
         return new Promise(((resolve, reject) => {
-            this.db.query("INSERT INTO useraccount(displayname,login,challenge) VALUES($1,$2,$3) RETURNING id ",
+            this.db.query(`INSERT INTO ${this.tablename}(displayname,login,challenge) VALUES($1,$2,$3) RETURNING id `,
                 [useraccount.displayName, useraccount.login, useraccount.challenge])
                 .then(res => resolve(res.rows[0]) )
                 .catch(e => reject(e))
@@ -15,7 +15,7 @@ module.exports = class UserAccountDAO extends BaseDAO{
     }
     getByLogin(login){
         return new Promise(((resolve, reject) => {
-            this.db.query("SELECT * FROM useraccount WHERE login=$1",[login])
+            this.db.query(`SELECT * FROM ${this.tablename} WHERE login=$1`,[login])
                 .then(res => {
                     resolve(res.rows[0])
                 } )

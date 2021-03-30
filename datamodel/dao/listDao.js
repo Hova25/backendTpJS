@@ -12,9 +12,9 @@ module.exports = class ListDao extends BaseDAO {
                 .catch(err=> reject(err))
         }))
     }
-    getAllArchived(){
+    getAllArchived(user){
         return new Promise(((resolve, reject) => {
-            this.db.query(`SELECT * from ${this.tablename} WHERE archived = true ORDER BY id DESC`)
+            this.db.query(`SELECT * from ${this.tablename} WHERE archived = true AND useraccount_id = $1 ORDER BY id DESC`, [user.id])
                 .then(res=>resolve(res.rows))
                 .catch(err=> reject(err))
         }))

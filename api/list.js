@@ -1,22 +1,23 @@
-
+const utile = require('./utile')()
 module.exports = (app, service, jwt) => {
+
+
+
     app.get("/list", jwt.validateJWT,async (req, res) => {
-        res.json(await service.dao.getAll())
+        res.json(await service.dao.getAll(req.user))
     })
     app.get("/list/no_archived", jwt.validateJWT, async (req, res) => {
         const user = req.user
         res.json(await service.dao.getAllNoArchived(user))
     })
-    app.get("/list/archived", async (req, res) => {
-        res.json(await service.dao.getAllArchived())
+    app.get("/list/archived", jwt.validateJWT, async (req, res) => {
+        res.json(await service.dao.getAllArchived(req.user))
     })
 
-    app.get("/list/:id", async (req, res) => {
+    app.get("/list/:id", jwt.validateJWT,async (req, res) => {
         try {
-            const list = res.json(await service.dao.getById(req.params.id))
-            if(list === undefined){
-                return res.status(404).end()
-            }
+            const list = await service.dao.getById(req.params.id, req.user)
+            utile.verif(req,res,list)
             return res.json(list)
         }catch (e) {
             res.status(400).end()
@@ -25,14 +26,14 @@ module.exports = (app, service, jwt) => {
 
     app.put("/list", jwt.validateJWT, async (req,res)=>{
         try {
-            const user = req.user
             const list = req.body
             if ((list.id === undefined) || (list.id == null) || (!service.isValid(list))) {
                 return res.status(400).end()
             }
-            if (await service.dao.getById(list.id) === undefined) {
-                return res.status(404).end()
-            }
+            const prevList = await service.dao.getById(list.id)
+
+            utile.verif(req,res, prevList)
+
             service.dao.update(list)
                 .then(res.status(200).end())
                 .catch(err => {
@@ -52,6 +53,7 @@ module.exports = (app, service, jwt) => {
             if (!service.isValid(list) ){
                 return res.status(400).end()
             }
+            list.useraccount_id = user.id
             service.dao.insert(list)
                 .then(id => res.json(id))
                 .catch(err => {
@@ -64,8 +66,12 @@ module.exports = (app, service, jwt) => {
         }
     })
 
-    app.patch("/list/:id", async (req, res) => {
+    app.patch("/list/:id", jwt.validateJWT, async (req, res) => {
         try{
+            const listId = req.params.id
+            const prevList = await service.dao.getById(listId)
+            utile.verif(req,res,prevList)
+
             service.dao.archived(req.params.id)
                 .then(res.status(200).end())
                 .catch(err => {
@@ -77,8 +83,11 @@ module.exports = (app, service, jwt) => {
             res.status(400).end()
         }
     })
-    app.patch("/list/no_archive/:id", async (req, res) => {
+    app.patch("/list/no_archive/:id",jwt.validateJWT, async (req, res) => {
         try{
+            const listId = req.params.id
+            const prevList = await service.dao.getById(listId)
+            utile.verif(req,res,prevList)
             service.dao.dearchived(req.params.id)
                 .then(res.status(200).end())
                 .catch(err => {
@@ -92,12 +101,10 @@ module.exports = (app, service, jwt) => {
     })
 
 
-    app.delete("/list/:id", async (req, res) => {
+    app.delete("/list/:id", jwt.validateJWT, async (req, res) => {
         try{
             const list = await service.dao.getById(req.params.id)
-            if(list === undefined){
-                return res.status(404).end()
-            }
+            utile.verif(req,res,list)
             service.dao.delete(req.params.id)
                 .then(res.status(200).end())
                 .catch(err => {

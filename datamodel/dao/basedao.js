@@ -12,9 +12,15 @@ module.exports = class BaseDAO {
                 .then(res => resolve(res.rows[0]) )
                 .catch(e => reject(e)))
     }
-    getAll(){
+    getAll(user){
+        let filterUserAccount = ""
+        if(user!==undefined){
+            filterUserAccount = `WHERE useraccount_id = ${user.id}`
+        }else{
+            filterUserAccount = "WHERE 1=0"
+        }
         return new Promise(((resolve, reject) => {
-            this.db.query(`SELECT * from ${this.tablename}`)
+            this.db.query(`SELECT * from ${this.tablename} ${filterUserAccount}`)
                 .then(res=>resolve(res.rows))
                 .catch(err=> reject(err))
         }))
