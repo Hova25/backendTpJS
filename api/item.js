@@ -37,7 +37,7 @@ module.exports = (app, service, jwt) => {
             res.status(400).end()
         }
     })
-    app.post("/item", async (req,res)=>{
+    app.post("/item",jwt.validateJWT, async (req,res)=>{
         try {
             const item = req.body
             if (!service.isValid(item) ){
@@ -56,7 +56,7 @@ module.exports = (app, service, jwt) => {
         }
     })
 
-    app.patch("/item/:id", async (req, res) => {
+    app.patch("/item/:id",jwt.validateJWT, async (req, res) => {
         try{
             const itemId = req.params.id
             const prevItem = await service.dao.getById(itemId)
@@ -74,7 +74,7 @@ module.exports = (app, service, jwt) => {
         }
     })
 
-    app.delete("/item/:id", async (req, res) => {
+    app.delete("/item/:id",<jwt className="validateJWT"></jwt>, async (req, res) => {
         try {
             const item = await service.dao.getById(req.params.id)
             utile.verif(req,res,item)

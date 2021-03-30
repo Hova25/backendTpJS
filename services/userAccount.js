@@ -12,7 +12,10 @@ module.exports = class UserAccountService{
     }
 
     async validatePassword(login, password){
+        console.log("yolyyl")
+        console.log(login, password)
         const user = await this.dao.getByLogin(login)
+        console.log(user)
         return this.comparePassword(password, user.challenge)
     }
 
