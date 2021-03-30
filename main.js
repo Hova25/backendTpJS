@@ -26,7 +26,7 @@ const jwt = require('./jwt')(userAccountS)
 
 //appel de mes routes api
 require('./api/list')(app, listS, jwt)
-require('./api/item')(app, itemS)
+require('./api/item')(app, itemS, jwt)
 require('./api/useraccount')(app, userAccountS, jwt)
 
 

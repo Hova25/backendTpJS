@@ -1,31 +1,30 @@
-module.exports = (app, service) => {
-    app.get("/item", async (req, res) => {
-        res.json(await service.dao.getAll())
+const utile = require('./utile')()
+
+module.exports = (app, service, jwt) => {
+    app.get("/item",jwt.validateJWT ,async (req, res) => {
+        res.json(await service.dao.getAll(req.user))
     })
-    app.get("/item/:id", async (req, res) => {
+    app.get("/item/:id",jwt.validateJWT ,async (req, res) => {
         try {
-            const item = res.json(await service.dao.getById(req.params.id))
-            if(item === undefined){
-                return res.status(404).end()
-            }
+            const item = await service.dao.getById(req.params.id)
+            utile.verif(req,res,item)
             return res.json(item)
         }catch (e) {
             res.status(400).end()
         }
     })
-    app.get("/item/list/:id_list", async (req, res) => {
-        res.json(await service.dao.getByPropertyNameAndValue("id_list", req.params.id_list))
+    app.get("/item/list/:id_list",jwt.validateJWT ,async (req, res) => {
+        res.json(await service.dao.getByPropertyNameAndValue("id_list", req.params.id_list, req.user ))
     })
 
-    app.put("/item", async (req,res)=>{
+    app.put("/item",jwt.validateJWT , async (req,res)=>{
         try {
             const item = req.body
             if ((item.id === undefined) || (item.id == null) || (!service.isValid(item))) {
                 return res.status(400).end()
             }
-            if (await service.dao.getById(item.id) === undefined) {
-                return res.status(404).end()
-            }
+            const prevItem = await service.dao.getById(item.id)
+            utile.verif(req,res,prevItem)
             service.dao.update(item)
                 .then(res.status(200).end())
                 .catch(err => {
@@ -44,6 +43,7 @@ module.exports = (app, service) => {
             if (!service.isValid(item) ){
                 return res.status(400).end()
             }
+            item.useraccount_id = req.user.id
             service.dao.insert(item)
                 .then( res.status(200).end())
                 .catch(err => {
@@ -58,7 +58,11 @@ module.exports = (app, service) => {
 
     app.patch("/item/:id", async (req, res) => {
         try{
-            service.dao.updateCheck(req.params.id)
+            const itemId = req.params.id
+            const prevItem = await service.dao.getById(itemId)
+            utile.verif(req,res,prevItem)
+
+            service.dao.updateCheck(itemId)
                 .then(res.status(200).end())
                 .catch(err => {
                     console.log(err)
@@ -73,9 +77,7 @@ module.exports = (app, service) => {
     app.delete("/item/:id", async (req, res) => {
         try {
             const item = await service.dao.getById(req.params.id)
-            if (item === undefined) {
-                return res.status(404).end()
-            }
+            utile.verif(req,res,item)
             service.dao.delete(req.params.id)
                 .then(res.status(200).end())
                 .catch(err => {

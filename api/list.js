@@ -1,8 +1,6 @@
 const utile = require('./utile')()
+
 module.exports = (app, service, jwt) => {
-
-
-
     app.get("/list", jwt.validateJWT,async (req, res) => {
         res.json(await service.dao.getAll(req.user))
     })
@@ -72,7 +70,7 @@ module.exports = (app, service, jwt) => {
             const prevList = await service.dao.getById(listId)
             utile.verif(req,res,prevList)
 
-            service.dao.archived(req.params.id)
+            service.dao.archived(listId)
                 .then(res.status(200).end())
                 .catch(err => {
                     console.log(err)
@@ -88,7 +86,7 @@ module.exports = (app, service, jwt) => {
             const listId = req.params.id
             const prevList = await service.dao.getById(listId)
             utile.verif(req,res,prevList)
-            service.dao.dearchived(req.params.id)
+            service.dao.dearchived(listId)
                 .then(res.status(200).end())
                 .catch(err => {
                     console.log(err)
