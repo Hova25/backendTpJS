@@ -1,9 +1,11 @@
-module.exports = (app, service) => {
-    app.get("/list", async (req, res) => {
+
+module.exports = (app, service, jwt) => {
+    app.get("/list", jwt.validateJWT,async (req, res) => {
         res.json(await service.dao.getAll())
     })
-    app.get("/list/no_archived", async (req, res) => {
-        res.json(await service.dao.getAllNoArchived())
+    app.get("/list/no_archived", jwt.validateJWT, async (req, res) => {
+        const user = req.user
+        res.json(await service.dao.getAllNoArchived(user))
     })
     app.get("/list/archived", async (req, res) => {
         res.json(await service.dao.getAllArchived())
@@ -21,8 +23,9 @@ module.exports = (app, service) => {
         }
     })
 
-    app.put("/list", async (req,res)=>{
+    app.put("/list", jwt.validateJWT, async (req,res)=>{
         try {
+            const user = req.user
             const list = req.body
             if ((list.id === undefined) || (list.id == null) || (!service.isValid(list))) {
                 return res.status(400).end()
@@ -42,9 +45,10 @@ module.exports = (app, service) => {
             res.status(400).end()
         }
     })
-    app.post("/list", async (req,res)=>{
+    app.post("/list", jwt.validateJWT, async (req,res)=>{
         try {
             const list = req.body
+            const user = req.user
             if (!service.isValid(list) ){
                 return res.status(400).end()
             }
