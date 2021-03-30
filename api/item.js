@@ -74,7 +74,7 @@ module.exports = (app, service, jwt) => {
         }
     })
 
-    app.delete("/item/:id",<jwt className="validateJWT"></jwt>, async (req, res) => {
+    app.delete("/item/:id",jwt.validateJWT, async (req, res) => {
         try {
             const item = await service.dao.getById(req.params.id)
             utile.verif(req,res,item)
