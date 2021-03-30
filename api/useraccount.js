@@ -19,5 +19,13 @@ module.exports = (app, service, jwt) => {
             })
     })
 
+    app.get('/useraccount/myaccount', jwt.validateJWT, (req,res)=>{
+        if(req.user!==undefined || req.user!==null){
+            res.json({"id":req.user.id,"displayname":req.user.displayname,"login":req.user.login})
+        }else{
+            res.status(400).end()
+            return
+        }
+    })
 
 }

@@ -21,6 +21,5 @@ module.exports = class UserAccountDAO extends BaseDAO{
                 } )
                 .catch(e => reject(e))
         }))
-
     }
 }
