@@ -1,10 +1,5 @@
 module.exports = (app, service, jwt) => {
-    app.post('/useraccount/authenticate', (req,res) => {
-        const {login, password} = req.body
-        if((login === undefined)|| (password === undefined)){
-            res.status(400).end()
-            return
-        }
+    function validatePassword(res, req, login, password){
         service.validatePassword(login,password)
             .then(authenticated => {
                 if(!authenticated){
@@ -17,7 +12,18 @@ module.exports = (app, service, jwt) => {
                 console.log(e)
                 res.status(500).end()
             })
+    }
+
+    app.post('/useraccount/authenticate', (req,res) => {
+        const {login, password} = req.body
+        if((login === undefined)|| (password === undefined)){
+            res.status(400).end()
+            return
+        }
+        validatePassword(res,req,login,password)
     })
+
+
 
     app.get('/useraccount/myaccount', jwt.validateJWT, (req,res)=>{
         if(req.user!==undefined || req.user!==null){
@@ -26,6 +32,39 @@ module.exports = (app, service, jwt) => {
             res.status(400).end()
             return
         }
+    })
+
+    app.get('/useraccount/checklogin',async (req,res)=>{
+        const login = req.query.login
+        if(login===undefined){
+            res.status(400).end()
+            return
+        }
+        if(login!==undefined || login!==null){
+            const user = await service.dao.getByLogin(login)
+            if(user===undefined){
+                res.status(200).end()
+            }else{
+                res.status(401).end()
+            }
+        }else{
+            res.status(400).end()
+            return
+        }
+    })
+
+    app.post('/useraccount/signup', (req,res)=>{
+        if(req.body.displayname==='' && req.body.login==='' && req.body.challenge===''){
+            res.status(400).end()
+            return
+        }
+        service.insert(req.body.displayname, req.body.login, req.body.challenge)
+            .then(_ => {
+                res.json({"displayname":req.body.displayname, "login":req.body.login})
+            })
+            .catch(e => {
+                res.status(500).end()
+            })
     })
 
 }

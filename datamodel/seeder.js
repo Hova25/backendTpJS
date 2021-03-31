@@ -11,16 +11,16 @@ module.exports = (listService, itemService,userAccountService) => {
             // INSERTs
             const userAccount1 =  await userAccountService.insert(`User1`,"user1@exemple.fr", "ex1")
             for(let i=0; i<5; i++){
-                const listId = await listService.dao.insert(new List(`Shop${i}`, new Date(), false, userAccount1.id))
+                const listId = await listService.dao.insert(new List(`ShopUser1${i}`, new Date(), false, userAccount1.id))
                 for(let j=0;j<7;j++){
-                    await itemService.dao.insert(new Item(listId, `Label-${j}`,j, false, userAccount1.id))
+                    await itemService.dao.insert(new Item(listId, `LabelUser1-${j}`,j, false, userAccount1.id))
                 }
             }
             const userAccount2 =  await userAccountService.insert(`User2`,"user2@exemple.fr", "ex2")
             for(let i=0; i<5; i++){
-                const listId = await listService.dao.insert(new List(`Shop${i}`, new Date(), false, userAccount2.id))
+                const listId = await listService.dao.insert(new List(`ShopUser2${i}`, new Date(), false, userAccount2.id))
                 for(let j=0;j<7;j++){
-                    await itemService.dao.insert(new Item(listId, `Label-${j}`,j, false, userAccount2.id))
+                    await itemService.dao.insert(new Item(listId, `LabelUser2-${j}`,j, false, userAccount2.id))
                 }
             }
 
