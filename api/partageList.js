@@ -38,4 +38,19 @@ module.exports = (app, service, jwt) => {
         }
     })
 
+    app.delete(`${url}/:id`,jwt.validateJWT, async (req, res) => {
+        try {
+            const partageList = await service.dao.getById(req.params.id)
+            utile.verifByOwner(req,res,partageList)
+            service.dao.delete(req.params.id)
+                .then(res.status(200).end())
+                .catch(err => {
+                    console.log(err)
+                    res.status(500).end()
+                })
+        }catch (err) {
+            console.log(err)
+            res.status(400).end()
+        }
+    })
 }
