@@ -25,12 +25,14 @@ module.exports = class BaseDAO {
                 .catch(err=> reject(err))
         }))
     } 
-    getByPropertyNameAndValue(propertyName, value, user){
+    getByPropertyNameAndValue(propertyName, value, user, secure){
         let filterUserAccount = ""
-        if(user!==undefined){
-            filterUserAccount = `AND useraccount_id = ${user.id}`
-        }else{
-            filterUserAccount = "AND 1=0"
+        if(secure!==false) {
+            if (user !== undefined) {
+                filterUserAccount = `AND useraccount_id = ${user.id}`
+            } else {
+                filterUserAccount = "AND 1=0"
+            }
         }
         return new Promise((resolve, reject) =>
             this.db.query(`SELECT * FROM ${this.tablename} WHERE ${propertyName}=$1 ${filterUserAccount} ORDER BY id`, [ value ])

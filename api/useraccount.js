@@ -33,9 +33,21 @@ module.exports = (app, service, jwt) => {
             return
         }
     })
+    app.get("/useraccount/get/:id", async (req, res) => {
+        try {
+            const useraccount = await service.dao.getById(req.params.id)
+            useraccount.challenge = undefined
+            return res.json(useraccount)
+        }catch (e) {
+            res.status(400).end()
+        }
+    })
+
 
     app.get('/useraccount/checklogin',async (req,res)=>{
+        console.log("lkdklds")
         const login = req.query.login
+        console.log("lkdlkd")
         if(login===undefined){
             res.status(400).end()
             return
