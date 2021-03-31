@@ -21,4 +21,16 @@ module.exports = class PartageListDao extends BaseDAO {
                 .catch(e => reject(e)))
     }
 
+    async updateEdit(partageList){
+        if(partageList!==undefined){
+            if(partageList.edit===true) {
+                return this.db.query(`UPDATE ${this.tablename} SET edit=false WHERE id=$1 `,
+                    [partageList.id])
+            }else{
+                return this.db.query(`UPDATE ${this.tablename} SET edit=true WHERE id=$1 `,
+                    [partageList.id])
+            }
+        }
+    }
+
 }

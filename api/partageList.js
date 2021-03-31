@@ -20,4 +20,22 @@ module.exports = (app, service, jwt) => {
         }
     })
 
+    app.patch(`${url}/:partageListId`,jwt.validateJWT, async (req, res) => {
+        try{
+            const partageListId = req.params.partageListId
+            const prevPartageList = await service.dao.getById(partageListId)
+            utile.verifByOwner(req,res,prevPartageList)
+
+            service.dao.updateEdit(prevPartageList)
+                .then(res.status(200).end())
+                .catch(err => {
+                    console.log(err)
+                    res.status(500).end()
+                })
+        }catch (err) {
+            console.log(err)
+            res.status(400).end
+        }
+    })
+
 }
