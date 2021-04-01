@@ -42,6 +42,16 @@ module.exports = (app, service, jwt) => {
             res.status(400).end()
         }
     })
+    app.get("/useraccount/get/email/:email",jwt.validateJWT, async (req, res) => {
+        try {
+            let useraccount = await service.dao.getByPropertyNameAndValue("login",req.params.email, false, false)
+            useraccount = useraccount[0]
+            useraccount.challenge = undefined
+            return res.json(useraccount)
+        }catch (e) {
+            res.status(400).end()
+        }
+    })
 
 
     app.get('/useraccount/checklogin',async (req,res)=>{

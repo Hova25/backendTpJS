@@ -8,17 +8,38 @@ module.exports = (app, service, jwt) => {
 
     app.get(`${url}/:id_list`, jwt.validateJWT, async (req, res) => {
         try{
-            const partagedList = await service.dao.getByListIdAndOwnerId( req.params.id_list, req.user.id)
-            if(partagedList.length === 0){
-                res.status(404).end()
-                return
+            if(req.query.useraccount_id!==undefined){
+                const partagedList = await service.dao.getByListIdAndUserAccountId( req.params.id_list, req.query.useraccount_id)
+                return res.json(partagedList)
+            }else{
+                const partagedList = await service.dao.getByListIdAndOwnerId( req.params.id_list, req.user.id)
+                return res.json(partagedList)
             }
-            return res.json(partagedList)
         }
         catch (e) {
             res.status(400).end()
         }
     })
+
+    app.post(`${url}`,jwt.validateJWT, async (req,res)=>{
+        try {
+            const partageList = req.body
+            if (!service.isValid(partageList) ){
+                return res.status(400).end()
+            }
+            partageList.owneruser_id = req.user.id
+            service.dao.insert(partageList)
+                .then( res.status(200).end())
+                .catch(err => {
+                    console.log(err)
+                    res.status(500).end()
+                })
+        }catch (err) {
+            console.log(err)
+            res.status(400).end()
+        }
+    })
+
 
     app.patch(`${url}/:partageListId`,jwt.validateJWT, async (req, res) => {
         try{

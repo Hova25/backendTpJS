@@ -21,6 +21,13 @@ module.exports = class PartageListDao extends BaseDAO {
                 .catch(e => reject(e)))
     }
 
+    getByListIdAndUserAccountId(listId, userAccountId){
+        return new Promise((resolve, reject) =>
+            this.db.query(`SELECT * FROM ${this.tablename} WHERE id_list=$1 AND useraccount_id=$2 ORDER BY useraccount_id`, [ listId, userAccountId ])
+                .then(res => resolve(res.rows) )
+                .catch(e => reject(e)))
+    }
+
     async updateEdit(partageList){
         if(partageList!==undefined){
             if(partageList.edit===true) {
