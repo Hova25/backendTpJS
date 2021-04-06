@@ -14,7 +14,13 @@ module.exports = (app, service, jwt) => {
         }
     })
     app.get("/item/list/:id_list",jwt.validateJWT ,async (req, res) => {
-        res.json(await service.dao.getByPropertyNameAndValue("id_list", req.params.id_list, req.user ))
+        const user = {}
+        user.id = req.query.useraccount_id
+        if(req.query.useraccount_id){
+            res.json(await service.dao.getByPropertyNameAndValue("id_list", req.params.id_list, user ))
+        }else{
+            res.json(await service.dao.getByPropertyNameAndValue("id_list", req.params.id_list, req.user ))
+        }
     })
 
     app.put("/item",jwt.validateJWT , async (req,res)=>{
