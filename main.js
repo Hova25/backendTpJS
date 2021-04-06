@@ -3,6 +3,9 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const cors = require('cors')
 const morgan = require('morgan')
+const swig = require('swig')
+
+
 const itemService = require("./services/item")
 const listService = require("./services/list")
 const userAccountService = require("./services/userAccount")
@@ -21,10 +24,10 @@ const db = new pg.Pool({ connectionString: connectionString })
 // creation variable service
 
 mailer = require('express-mailer');
-
+app.engine('html', swig.renderFile)
 app.set('views', __dirname + '/views');
-app.set('view engine', 'jade');
-// app.set('view engine', 'html');
+// app.set('view engine', 'jade');
+app.set('view engine', 'html');
 
 mailer.extend(app, {
     from: 'projet.hova.esimed@gmail.com',
