@@ -1,6 +1,6 @@
 const utile = require('./utile')()
 
-module.exports = (app, service, jwt) => {
+module.exports = (app, service, servicePartageList, jwt) => {
     app.get("/list", jwt.validateJWT,async (req, res) => {
         res.json(await service.dao.getAll(req.user))
     })
@@ -15,9 +15,20 @@ module.exports = (app, service, jwt) => {
     app.get("/list/:id", jwt.validateJWT,async (req, res) => {
         try {
             const list = await service.dao.getById(req.params.id, req.user)
-            utile.verif(req,res,list)
+            if (list === undefined) {
+                return res.status(404).end()
+            }
+            if (list.useraccount_id !== req.user.id) {
+                console.log(req.params.id, req.user.id)
+                const partagedList = await servicePartageList.dao.getByListIdAndUserAccountId(req.params.id, req.user.id)
+                if(partagedList[0].useraccount_id !== req.user.id){
+                    return res.status(403).end()
+                }
+            }
+
             return res.json(list)
         }catch (e) {
+            console.log(e)
             res.status(400).end()
         }
     })

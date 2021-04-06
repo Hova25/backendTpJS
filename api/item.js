@@ -45,7 +45,7 @@ module.exports = (app, service, jwt) => {
             }
             item.useraccount_id = req.user.id
             service.dao.insert(item)
-                .then( res.status(200).end())
+                .then(_ => res.status(200).end())
                 .catch(err => {
                     console.log(err)
                     res.status(500).end()

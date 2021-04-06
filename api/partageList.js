@@ -5,7 +5,18 @@ module.exports = (app, service, jwt) => {
     app.get(`${url}`, jwt.validateJWT,async (req, res) => {
         res.json(await service.dao.getAll(req.user))
     })
-
+    app.get(`${url}/partaged`,jwt.validateJWT, async (req, res ) => {
+        try{
+            if(req.user.id!==undefined){
+                const partagedList = await service.dao.getByListIdAndUserAccountId(undefined ,req.user.id)
+                return res.json(partagedList)
+            }
+            res.status(401).end()
+        }
+        catch (e) {
+            res.status(400).end()
+        }
+    })
     app.get(`${url}/:id_list`, jwt.validateJWT, async (req, res) => {
         try{
             if(req.query.useraccount_id!==undefined){

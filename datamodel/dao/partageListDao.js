@@ -22,8 +22,12 @@ module.exports = class PartageListDao extends BaseDAO {
     }
 
     getByListIdAndUserAccountId(listId, userAccountId){
+        let filterIdList = ""
+        if(listId!==undefined){
+            filterIdList = ` AND id_list = ${listId} `
+        }
         return new Promise((resolve, reject) =>
-            this.db.query(`SELECT * FROM ${this.tablename} WHERE id_list=$1 AND useraccount_id=$2 ORDER BY useraccount_id`, [ listId, userAccountId ])
+            this.db.query(`SELECT * FROM ${this.tablename} WHERE useraccount_id=$1 ${filterIdList} ORDER BY useraccount_id`, [ userAccountId ])
                 .then(res => resolve(res.rows) )
                 .catch(e => reject(e)))
     }

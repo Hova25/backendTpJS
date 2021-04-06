@@ -13,6 +13,10 @@ module.exports = (listService, itemService,userAccountService, partageListServic
             // INSERTs
             const userAccount1 =  await userAccountService.insert(`User1`,"user1@exemple.fr", "ex1")
             const userAccount2 =  await userAccountService.insert(`User2`,"user2@exemple.fr", "ex2")
+            await userAccountService.insert(`User3`,"user3@exemple.fr", "ex3")
+            await userAccountService.insert(`User4`,"user4@exemple.fr", "ex4")
+            await userAccountService.insert(`User5`,"user5@exemple.fr", "ex5")
+            await userAccountService.insert(`User6`,"user6@exemple.fr", "ex6")
 
             for(let i=0; i<5; i++){
                 const listId = await listService.dao.insert(new List(`ShopUser1${i}`, new Date(), false, userAccount1.id))
