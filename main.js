@@ -20,6 +20,24 @@ const db = new pg.Pool({ connectionString: connectionString })
 
 // creation variable service
 
+mailer = require('express-mailer');
+
+app.set('views', __dirname + '/views');
+app.set('view engine', 'jade');
+// app.set('view engine', 'html');
+
+mailer.extend(app, {
+    from: 'projet.hova.esimed@gmail.com',
+    host: 'smtp.gmail.com', // hostname
+    secureConnection: true, // use SSL
+    port: 465, // port for secure SMTP
+    transportMethod: 'SMTP', // default is SMTP. Accepts anything that nodemailer accepts
+    auth: {
+        user: 'projet.hova.esimed@gmail.com',
+        pass: 'Projethova*'
+    }
+});
+
 
 const itemS = new itemService(db)
 const listS = new listService(db)
@@ -29,6 +47,9 @@ const partageListS = new partageListService(db)
 const jwt = require('./jwt')(userAccountS)
 
 //appel de mes routes api
+require('./api/mailer')(app)
+
+
 require('./api/list')(app, listS, partageListS, jwt)
 require('./api/item')(app, itemS, jwt)
 require('./api/useraccount')(app, userAccountS, jwt)

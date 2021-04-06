@@ -15,6 +15,9 @@ module.exports = () => {
             if (item.owneruser_id !== req.user.id) {
                 return res.status(403).end()
             }
+        },
+        getSiteBaseUrl(){
+            return "https://localhost:3333/"
         }
     }
 }
