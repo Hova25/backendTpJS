@@ -34,7 +34,6 @@ module.exports = class BaseDAO {
                 filterUserAccount = "AND 1=0"
             }
         }
-        console.log(filterUserAccount)
         return new Promise((resolve, reject) =>
             this.db.query(`SELECT * FROM ${this.tablename} WHERE ${propertyName}=$1 ${filterUserAccount} ORDER BY id`, [ value ])
                 .then(res => resolve(res.rows) )

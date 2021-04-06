@@ -13,6 +13,13 @@ module.exports = class PartageListDao extends BaseDAO {
                 .catch(err => reject(err))
         }))
     }
+    getByIdAndOwnerId(listId, ownerId){
+        return new Promise((resolve, reject) =>
+            this.db.query(`SELECT * FROM ${this.tablename} WHERE id=$1 AND owneruser_id=$2 ORDER BY useraccount_id`, [ listId, ownerId ])
+                .then(res => resolve(res.rows) )
+                .catch(e => reject(e)))
+    }
+
 
     getByListIdAndOwnerId(listId, ownerId){
         return new Promise((resolve, reject) =>

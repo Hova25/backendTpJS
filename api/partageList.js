@@ -22,7 +22,12 @@ module.exports = (app, service, jwt) => {
             if(req.query.useraccount_id!==undefined){
                 const partagedList = await service.dao.getByListIdAndUserAccountId( req.params.id_list, req.query.useraccount_id)
                 return res.json(partagedList)
-            }else{
+            }
+            else if(req.query.owneruser_id!==undefined){
+                const partagedList = await service.dao.getByIdAndOwnerId( req.params.id_list, req.query.owneruser_id)
+                return res.json(partagedList[0])
+            }
+            else{
                 const partagedList = await service.dao.getByListIdAndOwnerId( req.params.id_list, req.user.id)
                 return res.json(partagedList)
             }

@@ -55,9 +55,7 @@ module.exports = (app, service, jwt) => {
 
 
     app.get('/useraccount/checklogin',async (req,res)=>{
-        console.log("lkdklds")
         const login = req.query.login
-        console.log("lkdlkd")
         if(login===undefined){
             res.status(400).end()
             return

@@ -19,7 +19,6 @@ module.exports = (app, service, servicePartageList, jwt) => {
                 return res.status(404).end()
             }
             if (list.useraccount_id !== req.user.id) {
-                console.log(req.params.id, req.user.id)
                 const partagedList = await servicePartageList.dao.getByListIdAndUserAccountId(req.params.id, req.user.id)
                 if(partagedList[0].useraccount_id !== req.user.id){
                     return res.status(403).end()
