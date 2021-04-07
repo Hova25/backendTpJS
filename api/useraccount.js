@@ -60,7 +60,7 @@ module.exports = (app, service, jwt) => {
             res.status(400).end()
             return
         }
-        if(login!==undefined || login!==null){
+        if(login!==undefined && login!==null){
             const user = await service.dao.getByLogin(login)
             if(user===undefined){
                 res.status(200).end()

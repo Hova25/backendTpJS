@@ -17,7 +17,7 @@ module.exports = () => {
             }
         },
         getSiteBaseUrl(){
-            return "https://localhost:3333/"
+            return "https://localhost:63342/tp01frontF/"
         }
     }
 }
