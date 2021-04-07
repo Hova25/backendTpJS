@@ -1,3 +1,5 @@
+const UserAccount = require("../datamodel/model/userAccount")
+
 module.exports = (app, service, jwt) => {
     function validatePassword(res, req, login, password){
         service.validatePassword(login,password)
@@ -23,6 +25,46 @@ module.exports = (app, service, jwt) => {
         validatePassword(res,req,login,password)
     })
 
+    app.patch("/useraccount/update_validation/:confirmation_code", async (req, res) => {
+        try{
+            const prevAccount = await service.dao.getByPropertyNameAndValue("confirmation_code",req.params.confirmation_code, false, false)
+            if(prevAccount.length===0){
+                res.status(404).end()
+            }
+            const confirmationCode = req.params.confirmation_code.split("--")
+            if(Date.now()<=confirmationCode[1]){
+                service.dao.updateValidation(req.params.confirmation_code)
+                    .then(res.status(200).end())
+                    .catch(err => {
+                        console.log(err)
+                        res.status(500).end()
+                    })
+            }else{
+                res.status(401).end()
+            }
+        }catch (err) {
+            console.log(err)
+            res.status(400).end
+        }
+    })
+    app.patch("/useraccount/update_confirmation_code/:login", async (req, res) => {
+        try{
+            let prevAccount = await service.dao.getByPropertyNameAndValue("login",req.params.login, false, false)
+            if(prevAccount.length>0){
+                prevAccount = prevAccount[0]
+            }
+            service.dao.updateConfirmationCode(prevAccount)
+                .then(res.status(200).end())
+                .catch(err => {
+                    console.log(err)
+                    res.status(500).end()
+                })
+        }catch (err) {
+            console.log(err)
+            res.status(400).end
+        }
+    })
+
 
 
     app.get('/useraccount/myaccount', jwt.validateJWT, (req,res)=>{
@@ -45,6 +87,16 @@ module.exports = (app, service, jwt) => {
     app.get("/useraccount/get/email/:email", async (req, res) => {
         try {
             let useraccount = await service.dao.getByPropertyNameAndValue("login",req.params.email, false, false)
+            useraccount = useraccount[0]
+            useraccount.challenge = undefined
+            return res.json(useraccount)
+        }catch (e) {
+            res.status(400).end()
+        }
+    })
+    app.get("/useraccount/get/confirmation_code/:confirmation_code", async (req, res) => {
+        try {
+            let useraccount = await service.dao.getByPropertyNameAndValue("confirmation_code",req.params.confirmation_code, false, false)
             useraccount = useraccount[0]
             useraccount.challenge = undefined
             return res.json(useraccount)

@@ -19,7 +19,7 @@ module.exports = class UserAccountService{
     hashPassword(password){
         return bcrypt.hashSync(password, 10)
     }
-    insert(displayname, login,password, active){
-        return this.dao.insert(new UserAccount(displayname,login, this.hashPassword(password), active))
+    insert(displayname, login,password){
+        return this.dao.insert(new UserAccount(displayname,login, this.hashPassword(password)))
     }
 }

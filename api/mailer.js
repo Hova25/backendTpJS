@@ -20,7 +20,4 @@ module.exports = (app) => {
         });
     });
 
-    app.get("/test",(req,res,next) => {
-        res.json({"test":"test"})
-    })
 }

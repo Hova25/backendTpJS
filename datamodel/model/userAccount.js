@@ -1,9 +1,9 @@
 const sha1 = require('js-sha1');
 
 module.exports = class UserAccount {
-    constructor(displayName, login, challenge, active) {
+    constructor(displayname, login, challenge, active) {
         this.id = null
-        this.displayName = displayName
+        this.displayname = displayname
         this.login = login
         this.challenge = challenge
         if(active!==undefined){
@@ -11,10 +11,14 @@ module.exports = class UserAccount {
         }else{
             this.active = false
         }
+        this.setConfirmationCode()
+    }
+
+    setConfirmationCode(){
         let today = new Date();
         let dateJplus1 = new Date();
         dateJplus1.setDate(today.getDate()+1)
 
-        this.confirmation_code = `${sha1(`${this.displayName}${this.login}`)}--${dateJplus1.getTime()}`
+        this.confirmation_code = `${sha1(`${this.displayname}${this.login}`)}--${dateJplus1.getTime()}`
     }
 }
