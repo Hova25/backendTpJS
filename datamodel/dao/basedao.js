@@ -22,7 +22,7 @@ module.exports = class BaseDAO {
             }
         }
         return new Promise(((resolve, reject) => {
-            this.db.query(`SELECT * from ${this.tablename} ${filterUserAccount}`)
+            this.db.query(`SELECT * from ${this.tablename} ${filterUserAccount} ORDER BY id`)
                 .then(res=>resolve(res.rows))
                 .catch(err=> reject(err))
         }))

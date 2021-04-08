@@ -13,6 +13,7 @@ const partageListService = require("./services/partageList")
 const roleService = require("./services/role")
 const userAccountHasRoleService = require("./services/userAccountHasRole")
 
+require('dotenv').config()
 
 const app = express()
 app.use(bodyParser.urlencoded({ extended: false })) // URLEncoded form data

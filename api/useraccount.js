@@ -17,6 +17,7 @@ module.exports = (app, service, jwt) => {
             })
     }
 
+
     app.post('/useraccount/authenticate', (req,res) => {
         const {login, password} = req.body
         if((login === undefined)|| (password === undefined)){
@@ -155,6 +156,24 @@ module.exports = (app, service, jwt) => {
 
 
 
+    app.get('/useraccount', jwt.validateJWT, async (req,res)=>{
+        if(req.user!==undefined || req.user!==null){
+            let test = 0
+            req.user.roles.forEach(role => {
+                if(role.name===process.env.ADMIN_ROLE_NAME){
+                    test++
+                }
+            })
+            if(test!==0){
+                res.json(await service.dao.getAll(undefined, true)).end()
+            }else{
+                res.status(401).end()
+            }
+        }else{
+            res.status(400).end()
+            return
+        }
+    })
     app.get('/useraccount/myaccount', jwt.validateJWT, (req,res)=>{
         if(req.user!==undefined || req.user!==null){
             res.json({"id":req.user.id,"displayname":req.user.displayname,"login":req.user.login})
@@ -239,11 +258,11 @@ module.exports = (app, service, jwt) => {
 
 
     app.post('/useraccount/checkrule', (req,res)=>{
-        if(req.body.idRule==='' && req.body.idUserAccount===''){
+        if(req.body.idRole==='' && req.body.idUserAccount===''){
             res.status(400).end()
             return
         }
-        service.daoUserAccountHasRole.checkIfRuleByIdRuleAndIdUserAccount(req.body.idRule, req.body.idUserAccount)
+        service.daoUserAccountHasRole.checkIfRuleByIdRuleAndIdUserAccount(req.body.idRole, req.body.idUserAccount)
             .then(response => {
                 if(response!==undefined){
                     res.status(200).end()
