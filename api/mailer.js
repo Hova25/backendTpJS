@@ -26,7 +26,7 @@ module.exports = (app) => {
             subject: 'MyShopList - Re-initialisation mot de passe',
             otherProperty: 'Other Property',
             name:req.body.displayname,
-            url_password: `${utile.getSiteBaseUrl()}confirmation.html?password=true&code=${req.body.password_code}`
+            url_password: `${utile.getSiteBaseUrl()}confirmation.html?password_reset=${req.body.password_code}`
         }, function (err) {
             if (err) {
                 // handle error

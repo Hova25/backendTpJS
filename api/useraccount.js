@@ -81,16 +81,23 @@ module.exports = (app, service, jwt) => {
             res.status(400).end()
         }
     })
-    app.post("/useraccount/update_password", async (req,res)=> {
+
+    app.post("/useraccount/update_password_with_password_code/:password_code", async (req,res)=> {
         try{
-            let prevAccount = await service.dao.getByPropertyNameAndValue("password_code",req.body.password_code, false, false)
+            let prevAccount = await service.dao.getByPropertyNameAndValue("password_code",req.params.password_code, false, false)
             if(prevAccount.length>0){
                 prevAccount = prevAccount[0]
-            }else{
+                }else{
                 res.status(404).end()
             }
             if(req.body.challenge!==undefined){
-                service.updatePassword(prevAccount.login, req.body.challenge)
+                const passwordCode = req.params.password_code.split("--")
+                if(Date.now()<=passwordCode[1]) {
+                    service.updatePassword(prevAccount.login, req.body.challenge)
+                    res.status(200).end()
+                }else{
+                    res.status(401).end()
+                }
             }else{
                 res.status(400).end()
             }
