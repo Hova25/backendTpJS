@@ -47,4 +47,9 @@ module.exports = class UserAccountDAO extends BaseDAO{
             [account.confirmation_code,account.login])
     }
 
+    updateInfo(id,displayname, login){
+        return this.db.query(`UPDATE ${this.tablename} SET displayname=$1,login=$2 WHERE id=$3`,
+            [displayname, login, id])
+    }
+
 }

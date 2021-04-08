@@ -6,7 +6,13 @@ module.exports = class UserAccountService{
     constructor(db) {
         this.dao =new UserAccountDAO(db)
     }
-
+    isValid(account){
+        if(account.displayname!==''&& account.displayname!==undefined && account.login!==''&& account.login!==undefined){
+            return true
+        }else{
+            return false
+        }
+    }
     comparePassword(password, hash){
         return bcrypt.compareSync(password, hash)
     }

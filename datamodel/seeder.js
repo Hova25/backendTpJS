@@ -11,9 +11,9 @@ module.exports = (listService, itemService,userAccountService, partageListServic
             await itemService.dao.db.query(`CREATE TABLE ${itemService.dao.tablename}(id SERIAL PRIMARY KEY, id_list INTEGER REFERENCES list (id),label TEXT NOT NULL, quantity INTEGER NOT NULL, checked BOOLEAN DEFAULT FALSE, useraccount_id INTEGER REFERENCES useraccount(id))`)
             await partageListService.dao.db.query(`CREATE TABLE ${partageListService.dao.tablename}(id SERIAL PRIMARY KEY, id_list INTEGER REFERENCES list (id), owneruser_id INTEGER REFERENCES useraccount(id),useraccount_id INTEGER REFERENCES useraccount(id), edit BOOLEAN DEFAULT FALSE)`)
             // INSERTs
-            const userAccount1 =  await userAccountService.insert(`User1`,"user1@exemple.fr", "ex1", true)
-            const userAccount2 =  await userAccountService.insert(`User2`,"user2@exemple.fr", "ex2", true)
-            await userAccountService.insert(`User3`,"user3@exemple.fr", "ex3", true)
+            const userAccount1 =  await userAccountService.insert(`User1`,"user1@exemple.fr", "ex1")
+            const userAccount2 =  await userAccountService.insert(`User2`,"user2@exemple.fr", "ex2")
+            await userAccountService.insert(`User3`,"user3@exemple.fr", "ex3")
             await userAccountService.insert(`User4`,"user4@exemple.fr", "ex4")
             await userAccountService.insert(`User5`,"user5@exemple.fr", "ex5")
             await userAccountService.insert(`User6`,"user6@exemple.fr", "ex6")

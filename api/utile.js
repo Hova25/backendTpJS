@@ -16,6 +16,14 @@ module.exports = () => {
                 return res.status(403).end()
             }
         },
+        verifByID(req, res, item) {
+            if (item === undefined) {
+                return res.status(404).end()
+            }
+            if (item.id !== req.user.id) {
+                return res.status(403).end()
+            }
+        },
         getSiteBaseUrl(){
             return "http://localhost:63342/tp01frontF/"
         }

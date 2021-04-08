@@ -1,4 +1,5 @@
 const UserAccount = require("../datamodel/model/userAccount")
+const utile = require('./utile')()
 
 module.exports = (app, service, jwt) => {
     function validatePassword(res, req, login, password){
@@ -24,6 +25,28 @@ module.exports = (app, service, jwt) => {
         }
         validatePassword(res,req,login,password)
     })
+
+    app.put("/useraccount/update_info",jwt.validateJWT , async (req,res)=>{
+        try {
+            const infos = req.body
+            if ((infos.id === undefined) || (infos.id == null) || (service.isValid(infos)===false)) {
+                return res.status(400).end()
+            }
+            const prevAccount = await service.dao.getById(infos.id)
+            utile.verifByID(req,res,prevAccount)
+            service.dao.updateInfo(infos.id, infos.displayname, infos.login)
+                .then(res.status(200).end())
+                .catch(err => {
+                    console.log(err)
+                    res.status(500).end()
+
+                })
+        }catch (err) {
+            console.log(err)
+            res.status(400).end()
+        }
+    })
+
 
     app.patch("/useraccount/update_validation/:confirmation_code", async (req, res) => {
         try{
