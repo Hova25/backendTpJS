@@ -43,8 +43,8 @@ module.exports = class UserAccountDAO extends BaseDAO{
     passwordUpdateCode(user){
         const account = Object.assign(new UserAccount(), user)
         account.setPasswordCode()
-        return this.db.query(`UPDATE ${this.tablename} SET confirmation_code=$1 WHERE login=$2 RETURNING confirmation_code `,
-            [account.confirmation_code,account.login])
+        return this.db.query(`UPDATE ${this.tablename} SET password_code=$1 WHERE login=$2 RETURNING password_code `,
+            [account.password_code,account.login])
     }
 
     updateInfo(id,displayname, login){

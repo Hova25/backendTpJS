@@ -93,6 +93,7 @@ module.exports = (app, service, jwt) => {
             if(prevAccount.length>0){
                 prevAccount = prevAccount[0]
             }
+            console.log('lkddlk')
             service.dao.passwordUpdateCode(prevAccount)
                 .then(res.status(200).end())
                 .catch(err => {
@@ -126,6 +127,27 @@ module.exports = (app, service, jwt) => {
             }
 
         }catch (err){
+            console.log(err)
+            res.status(400).end()
+        }
+    })
+
+    app.put("/useraccount/update_password",jwt.validateJWT , async (req,res)=>{
+        try {
+            const infos = req.body
+            if ((infos.id === undefined) || (infos.id == null)) {
+                return res.status(400).end()
+            }
+            const prevAccount = await service.dao.getById(infos.id)
+            utile.verifByID(req,res,prevAccount)
+            service.updatePassword(req.user.login, req.body.challenge )
+                .then(res.status(200).end())
+                .catch(err => {
+                    console.log(err)
+                    res.status(500).end()
+
+                })
+        }catch (err) {
             console.log(err)
             res.status(400).end()
         }
