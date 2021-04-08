@@ -20,4 +20,22 @@ module.exports = (app) => {
         });
     });
 
+    app.post('/mailer/reset_password', (req,res)=> {
+        app.mailer.send('reset_password_email', {
+            to: `${req.body.login}`,
+            subject: 'MyShopList - Re-initialisation mot de passe',
+            otherProperty: 'Other Property',
+            name:req.body.displayname,
+            url_password: `${utile.getSiteBaseUrl()}confirmation.html?password=true&code=${req.body.password_code}`
+        }, function (err) {
+            if (err) {
+                // handle error
+                console.log(err);
+                res.send('There was an error sending the email');
+                return;
+            }
+            res.send('Email Sent');
+        });
+    })
+
 }

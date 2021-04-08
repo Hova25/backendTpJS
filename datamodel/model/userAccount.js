@@ -12,6 +12,7 @@ module.exports = class UserAccount {
             this.active = false
         }
         this.setConfirmationCode()
+        this.setPasswordCode()
     }
 
     setConfirmationCode(){
@@ -19,6 +20,12 @@ module.exports = class UserAccount {
         let dateJplus1 = new Date();
         dateJplus1.setDate(today.getDate()+1)
 
-        this.confirmation_code = `${sha1(`${this.displayname}${this.login}`)}--${dateJplus1.getTime()}`
+        this.confirmation_code = `${sha1(`${this.displayname}${this.login}confirmationcode`)}--${dateJplus1.getTime()}`
+    }
+
+    setPasswordCode(){
+        let today = new Date();
+        let datePlus30Min = today.getTime()+1800000;
+        this.password_code = `${sha1(`${this.displayname}${this.login}setpassword`)}--${datePlus30Min}`
     }
 }

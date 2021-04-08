@@ -6,6 +6,7 @@
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "express-mailer": "^0.3.1",
+    "generate-password": "^1.6.0",
     "jade": "^1.11.0",
     "js-sha1": "^0.6.0",
     "jsonwebtoken": "^8.5.1",

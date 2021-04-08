@@ -44,7 +44,7 @@ module.exports = (app, service, jwt) => {
             }
         }catch (err) {
             console.log(err)
-            res.status(400).end
+            res.status(400).end()
         }
     })
     app.patch("/useraccount/update_confirmation_code/:login", async (req, res) => {
@@ -61,7 +61,43 @@ module.exports = (app, service, jwt) => {
                 })
         }catch (err) {
             console.log(err)
-            res.status(400).end
+            res.status(400).end()
+        }
+    })
+    app.patch("/useraccount/update_password_code/:login", async (req, res) => {
+        try{
+            let prevAccount = await service.dao.getByPropertyNameAndValue("login",req.params.login, false, false)
+            if(prevAccount.length>0){
+                prevAccount = prevAccount[0]
+            }
+            service.dao.passwordUpdateCode(prevAccount)
+                .then(res.status(200).end())
+                .catch(err => {
+                    console.log(err)
+                    res.status(500).end()
+                })
+        }catch (err) {
+            console.log(err)
+            res.status(400).end()
+        }
+    })
+    app.post("/useraccount/update_password", async (req,res)=> {
+        try{
+            let prevAccount = await service.dao.getByPropertyNameAndValue("password_code",req.body.password_code, false, false)
+            if(prevAccount.length>0){
+                prevAccount = prevAccount[0]
+            }else{
+                res.status(404).end()
+            }
+            if(req.body.challenge!==undefined){
+                service.updatePassword(prevAccount.login, req.body.challenge)
+            }else{
+                res.status(400).end()
+            }
+
+        }catch (err){
+            console.log(err)
+            res.status(400).end()
         }
     })
 
@@ -104,6 +140,16 @@ module.exports = (app, service, jwt) => {
             res.status(400).end()
         }
     })
+    app.get("/useraccount/get/password_code/:password_code", async (req, res) => {
+        try {
+            let useraccount = await service.dao.getByPropertyNameAndValue("password_code",req.params.password_code, false, false)
+            useraccount = useraccount[0]
+            useraccount.challenge = undefined
+            return res.json(useraccount)
+        }catch (e) {
+            res.status(400).end()
+        }
+    })
 
 
     app.get('/useraccount/checklogin',async (req,res)=>{
@@ -117,7 +163,7 @@ module.exports = (app, service, jwt) => {
             if(user===undefined){
                 res.status(200).end()
             }else{
-                res.status(401).end()
+                res.status(202).end()
             }
         }else{
             res.status(400).end()

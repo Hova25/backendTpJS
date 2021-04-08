@@ -22,4 +22,7 @@ module.exports = class UserAccountService{
     insert(displayname, login,password){
         return this.dao.insert(new UserAccount(displayname,login, this.hashPassword(password)))
     }
+    updatePassword(login, password){
+        return this.dao.updatePassword(login, this.hashPassword(password))
+    }
 }
