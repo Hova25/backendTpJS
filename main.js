@@ -10,6 +10,8 @@ const itemService = require("./services/item")
 const listService = require("./services/list")
 const userAccountService = require("./services/userAccount")
 const partageListService = require("./services/partageList")
+const roleService = require("./services/role")
+const userAccountHasRoleService = require("./services/userAccountHasRole")
 
 
 const app = express()
@@ -46,6 +48,8 @@ const itemS = new itemService(db)
 const listS = new listService(db)
 const userAccountS = new userAccountService(db)
 const partageListS = new partageListService(db)
+const roleS = new roleService(db)
+const userAccountHasRoleS = new userAccountHasRoleService(db)
 
 const jwt = require('./jwt')(userAccountS)
 
@@ -59,7 +63,7 @@ require('./api/useraccount')(app, userAccountS, jwt)
 require('./api/partageList')(app, partageListS, jwt)
 
 
-require('./datamodel/seeder')(listS,itemS, userAccountS, partageListS)
+require('./datamodel/seeder')(listS,itemS, userAccountS, partageListS,roleS,userAccountHasRoleS)
     .then(app.listen(3333))
     .catch(err => console.log(err))
 
