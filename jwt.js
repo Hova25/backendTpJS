@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken')
 const jwtKey = 'exemple cours secret key'
 const jwtExpiryTokenSeconds = 3600
 
-module.exports = (userAccountService) => {
+module.exports = (userAccountService, userAccountHasRoleService) => {
     return {
         validateJWT(req,res, next){
           if(req.headers.authorization === undefined){
@@ -17,6 +17,7 @@ module.exports = (userAccountService) => {
                 }
                 try {
                     req.user = await userAccountService.dao.getByLogin(token.user)
+                    req.user.roles = await userAccountHasRoleService.dao.getRolesByIdUserAccount(req.user.id)
                     //verification validité de l'utilisateur
                     return next()
                 }catch (e) {

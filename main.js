@@ -51,7 +51,7 @@ const partageListS = new partageListService(db)
 const roleS = new roleService(db)
 const userAccountHasRoleS = new userAccountHasRoleService(db)
 
-const jwt = require('./jwt')(userAccountS)
+const jwt = require('./jwt')(userAccountS, userAccountHasRoleS)
 
 //appel de mes routes api
 require('./api/mailer')(app)
@@ -61,6 +61,7 @@ require('./api/list')(app, listS, partageListS, jwt)
 require('./api/item')(app, itemS, jwt)
 require('./api/useraccount')(app, userAccountS, jwt)
 require('./api/partageList')(app, partageListS, jwt)
+require('./api/role')(app, roleS, jwt)
 
 
 require('./datamodel/seeder')(listS,itemS, userAccountS, partageListS,roleS,userAccountHasRoleS)

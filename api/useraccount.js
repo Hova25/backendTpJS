@@ -237,4 +237,24 @@ module.exports = (app, service, jwt) => {
             })
     })
 
+
+    app.post('/useraccount/checkrule', (req,res)=>{
+        if(req.body.idRule==='' && req.body.idUserAccount===''){
+            res.status(400).end()
+            return
+        }
+        service.daoUserAccountHasRole.checkIfRuleByIdRuleAndIdUserAccount(req.body.idRule, req.body.idUserAccount)
+            .then(response => {
+                if(response!==undefined){
+                    res.status(200).end()
+                }else{
+                    res.status(401).end()
+                }
+            })
+            .catch(e => {
+                console.log(e)
+                res.status(500).end()
+            })
+    })
+
 }

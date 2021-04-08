@@ -1,10 +1,12 @@
 const bcrypt = require("bcrypt")
 const UserAccountDAO = require("../datamodel/dao/userAccountDao")
+const UserAccountHasRoleDAO = require("../datamodel/dao/userAccountHasRoleDao")
 const UserAccount = require("../datamodel/model/userAccount")
 
 module.exports = class UserAccountService{
     constructor(db) {
         this.dao =new UserAccountDAO(db)
+        this.daoUserAccountHasRole = new UserAccountHasRoleDAO(db)
     }
     isValid(account){
         if(account.displayname!==''&& account.displayname!==undefined && account.login!==''&& account.login!==undefined){
