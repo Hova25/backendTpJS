@@ -71,7 +71,7 @@ module.exports = (app, service, jwt) => {
                 })
         }catch (err) {
             console.log(err)
-            res.status(400).end
+            res.status(400).end()
         }
     })
 

@@ -94,7 +94,6 @@ module.exports = (app, service, jwt) => {
             if(prevAccount.length>0){
                 prevAccount = prevAccount[0]
             }
-            console.log('lkddlk')
             service.dao.passwordUpdateCode(prevAccount)
                 .then(res.status(200).end())
                 .catch(err => {
@@ -165,7 +164,9 @@ module.exports = (app, service, jwt) => {
                 }
             })
             if(test!==0){
-                res.json(await service.dao.getAll(undefined, true)).end()
+                service.dao.getAll(undefined, true).then(response => {
+                    res.json(response).end()
+                })
             }else{
                 res.status(401).end()
             }
@@ -274,6 +275,36 @@ module.exports = (app, service, jwt) => {
                 console.log(e)
                 res.status(500).end()
             })
+    })
+
+    app.patch("/useraccount/change_active", jwt.validateJWT, async (req, res) => {
+        try{
+            let prevAccount = await service.dao.getById(req.body.id)
+            if(prevAccount.id!==req.user.id){
+                let test=0
+                req.user.roles.forEach(role => {
+                    if(role.name===process.env.ADMIN_ROLE_NAME){
+                        test++
+                    }
+                })
+                if(test>0){
+                    if(prevAccount.active===false){
+                        service.dao.changeActive(true,prevAccount.id)
+                    }else{
+                        service.dao.changeActive(false,prevAccount.id)
+                    }
+                    res.status(200).end()
+                }else{
+                    res.status(401).end()
+                }
+
+            }else{
+                res.status(401).end()
+            }
+        }catch (err) {
+            console.log(err)
+            res.status(400).end()
+        }
     })
 
 }

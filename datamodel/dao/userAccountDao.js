@@ -34,6 +34,11 @@ module.exports = class UserAccountDAO extends BaseDAO{
         return this.db.query(`UPDATE ${this.tablename} SET active=true WHERE confirmation_code=$1 `,
             [confirmation_code])
     }
+    changeActive(value,id){
+        return this.db.query(`UPDATE ${this.tablename} SET active=$1 WHERE id=$2 `,
+            [value,id])
+    }
+
     updateConfirmationCode(user){
         const account = Object.assign(new UserAccount(), user)
         account.setConfirmationCode()
