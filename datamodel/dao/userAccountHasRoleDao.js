@@ -14,6 +14,15 @@ module.exports = class UserAccountHasRoleDao extends BaseDAO {
         }))
     }
 
+    delete(useraccountHasRole){
+        return new Promise(((resolve, reject) => {
+            this.db.query(`DELETE FROM ${this.tablename} WHERE id_role=$1 AND id_useraccount=$2`,
+                [useraccountHasRole.idRole, useraccountHasRole.idUserAccount])
+                .then(res => resolve(res.rows[0]))
+                .catch(err => reject(err))
+        }))
+    }
+
     getRolesByIdUserAccount(userAccountId){
         return new Promise(((resolve, reject) => {
             this.db.query(`SELECT * FROM ${this.tablename} INNER JOIN role ON role.id = useraccount_has_role.id_role WHERE id_useraccount=$1`,

@@ -24,6 +24,18 @@ module.exports = () => {
                 return res.status(403).end()
             }
         },
+        verifAdminRole(req, res) {
+            let test = 0
+            req.user.roles.forEach(role => {
+                if(role.name===process.env.ADMIN_ROLE_NAME){
+                    test++
+                }
+            })
+            if(test===0){
+                return res.status(401).end()
+            }
+            return test
+        },
         getSiteBaseUrl(){
             return "http://localhost:63342/tp01frontF/"
         }

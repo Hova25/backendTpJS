@@ -1,4 +1,4 @@
-module.exports = class Role {
+module.exports = class UserAccountHasRole {
     constructor(idRole,idUserAccount) {
         this.idUserAccount = idUserAccount
         this.idRole = idRole

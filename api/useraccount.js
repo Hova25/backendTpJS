@@ -163,19 +163,10 @@ module.exports = (app, service, jwt) => {
 
     app.get('/useraccount', jwt.validateJWT, async (req,res)=>{
         if(req.user!==undefined || req.user!==null){
-            let test = 0
-            req.user.roles.forEach(role => {
-                if(role.name===process.env.ADMIN_ROLE_NAME){
-                    test++
-                }
+            utile.verifAdminRole(req, res)
+            service.dao.getAll(undefined, true).then(response => {
+                res.json(response).end()
             })
-            if(test!==0){
-                service.dao.getAll(undefined, true).then(response => {
-                    res.json(response).end()
-                })
-            }else{
-                res.status(401).end()
-            }
         }else{
             res.status(400).end()
             return
@@ -183,19 +174,10 @@ module.exports = (app, service, jwt) => {
     })
     app.get('/useraccount/searchbylogin/:login', jwt.validateJWT, async (req,res)=>{
         if(req.user!==undefined || req.user!==null){
-            let test = 0
-            req.user.roles.forEach(role => {
-                if(role.name===process.env.ADMIN_ROLE_NAME){
-                    test++
-                }
+            utile.verifAdminRole(req, res)
+            service.dao.getAllByLogin(req.params.login).then(response => {
+                res.json(response).end()
             })
-            if(test!==0){
-                service.dao.getAllByLogin(req.params.login).then(response => {
-                    res.json(response).end()
-                })
-            }else{
-                res.status(401).end()
-            }
         }else{
             res.status(400).end()
             return
