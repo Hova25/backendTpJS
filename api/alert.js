@@ -14,8 +14,17 @@ module.exports = (app, service, jwt) => {
             res.status(400).end()
         }
     })
-    app.get(`${url}`,jwt.validateJWT ,async (req, res) => {
+    app.get(`${url}`,jwt.validateJWT ,async (req, res) =>{
+        try {
+            const alerts = await service.dao.getAll(req.user)
+            res.json(alerts)
+        }catch (e) {
+            console.log(e)
+            res.status(400).end()
+        }
+    })
+    app.get(`${url}/admin/get/all`,jwt.validateJWT ,async (req, res) => {
         utile.verifAdminRole(req,res)
-        res.json(await service.dao.getAll())
+        res.json(await service.dao.getAll(undefined,true))
     })
 }
