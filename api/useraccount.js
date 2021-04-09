@@ -40,7 +40,11 @@ module.exports = (app, service, jwt) => {
                 return res.status(400).end()
             }
             const prevAccount = await service.dao.getById(infos.id)
-            utile.verifByID(req,res,prevAccount)
+            if(req.query.admin===undefined){
+                utile.verifByID(req,res,prevAccount)
+            }else {
+                utile.verifAdminRole(req,res)
+            }
             service.dao.updateInfo(infos.id, infos.displayname, infos.login)
                 .then(res.status(200).end())
                 .catch(err => {
