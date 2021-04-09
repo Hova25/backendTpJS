@@ -29,7 +29,13 @@ module.exports = class UserAccountDAO extends BaseDAO{
                 .catch(e => reject(e))
         }))
     }
-
+    getAllByLogin(login){
+        return new Promise(((resolve, reject) => {
+            this.db.query(`SELECT * from ${this.tablename} WHERE login LIKE '${login}%' ORDER BY id`)
+                .then(res=>resolve(res.rows))
+                .catch(err=> reject(err))
+        }))
+    }
     updateValidation(confirmation_code){
         return this.db.query(`UPDATE ${this.tablename} SET active=true WHERE confirmation_code=$1 `,
             [confirmation_code])

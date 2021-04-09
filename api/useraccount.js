@@ -181,6 +181,26 @@ module.exports = (app, service, jwt) => {
             return
         }
     })
+    app.get('/useraccount/searchbylogin/:login', jwt.validateJWT, async (req,res)=>{
+        if(req.user!==undefined || req.user!==null){
+            let test = 0
+            req.user.roles.forEach(role => {
+                if(role.name===process.env.ADMIN_ROLE_NAME){
+                    test++
+                }
+            })
+            if(test!==0){
+                service.dao.getAllByLogin(req.params.login).then(response => {
+                    res.json(response).end()
+                })
+            }else{
+                res.status(401).end()
+            }
+        }else{
+            res.status(400).end()
+            return
+        }
+    })
     app.get('/useraccount/myaccount', jwt.validateJWT, (req,res)=>{
         if(req.user!==undefined || req.user!==null){
             res.json({"id":req.user.id,"displayname":req.user.displayname,"login":req.user.login})
