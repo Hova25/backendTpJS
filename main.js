@@ -12,6 +12,7 @@ const userAccountService = require("./services/userAccount")
 const partageListService = require("./services/partageList")
 const roleService = require("./services/role")
 const userAccountHasRoleService = require("./services/userAccountHasRole")
+const alertService = require("./services/alert")
 
 require('dotenv').config()
 
@@ -51,6 +52,7 @@ const userAccountS = new userAccountService(db)
 const partageListS = new partageListService(db)
 const roleS = new roleService(db)
 const userAccountHasRoleS = new userAccountHasRoleService(db)
+const alertS = new alertService(db)
 
 const jwt = require('./jwt')(userAccountS, userAccountHasRoleS)
 
@@ -63,9 +65,10 @@ require('./api/item')(app, itemS, jwt)
 require('./api/useraccount')(app, userAccountS, jwt)
 require('./api/partageList')(app, partageListS, jwt)
 require('./api/role')(app, roleS, jwt)
+require('./api/alert')(app, alertS, jwt)
 
 
-require('./datamodel/seeder')(listS,itemS, userAccountS, partageListS,roleS,userAccountHasRoleS)
+require('./datamodel/seeder')(listS,itemS, userAccountS, partageListS,roleS,userAccountHasRoleS,alertS)
     .then(app.listen(3333))
     .catch(err => console.log(err))
 

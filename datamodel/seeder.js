@@ -4,8 +4,9 @@ const UserAccount = require('./model/userAccount')
 const PartageList = require('./model/partageList')
 const Role = require('./model/role')
 const UserAccountHasRole = require('./model/userAccountHasRole')
+const Alert = require('./model/alert')
 
-module.exports = (listService, itemService,userAccountService, partageListService, roleService, userAccountHasRoleService) => {
+module.exports = (listService, itemService,userAccountService, partageListService, roleService, userAccountHasRoleService, alertService) => {
     return new Promise(async (resolve, reject) => {
         try {
             await userAccountService.dao.db.query(`CREATE TABLE ${userAccountService.dao.tablename}(id SERIAL PRIMARY KEY, displayname TEXT NOT NULL, login TEXT NOT NULL, challenge TEXT NOT NULL, active BOOLEAN DEFAULT FALSE, confirmation_code TEXT NOT NULL, password_code TEXT NOT NULL)`)
@@ -14,6 +15,8 @@ module.exports = (listService, itemService,userAccountService, partageListServic
             await partageListService.dao.db.query(`CREATE TABLE ${partageListService.dao.tablename}(id SERIAL PRIMARY KEY, id_list INTEGER REFERENCES list (id), owneruser_id INTEGER REFERENCES useraccount(id),useraccount_id INTEGER REFERENCES useraccount(id), edit BOOLEAN DEFAULT FALSE)`)
             await roleService.dao.db.query(`CREATE TABLE ${roleService.dao.tablename}(id SERIAL PRIMARY KEY, name TEXT NOT NULL, description TEXT NOT NULL)`)
             await userAccountHasRoleService.dao.db.query(`CREATE TABLE ${userAccountHasRoleService.dao.tablename}(id_role INTEGER REFERENCES role(id),id_useraccount INTEGER REFERENCES useraccount(id))`)
+            await alertService.dao.db.query(`CREATE TABLE ${alertService.dao.tablename}(id SERIAL PRIMARY KEY,useraccount_id INTEGER REFERENCES useraccount(id), title TEXT NOT NULL, text TEXT NOT NULL, date DATE NOT NULL)`)
+
             // INSERTs
             const role1 = await roleService.dao.insert(new Role("Utilisateur", "Utilisateur lambda") )
             const role2 = await roleService.dao.insert(new Role("Administrateur", "Administrateur lambda") )
