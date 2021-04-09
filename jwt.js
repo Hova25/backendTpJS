@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken')
-const jwtKey = 'exemple cours secret key'
+const jwtKey = 'myshoplist secret key'
 const jwtExpiryTokenSeconds = 3600
+const refreshJwtExpiryTokenSeconds = 86400
 
 module.exports = (userAccountService, userAccountHasRoleService) => {
     return {
@@ -30,6 +31,12 @@ module.exports = (userAccountService, userAccountHasRoleService) => {
             return jwt.sign({user}, jwtKey , {
                 algorithm: 'HS256',
                 expiresIn: jwtExpiryTokenSeconds
+            })
+        },
+        generateRefreshJWT(user) {
+            return jwt.sign({user}, jwtKey , {
+                algorithm: 'HS256',
+                expiresIn: refreshJwtExpiryTokenSeconds
             })
         }
     }
