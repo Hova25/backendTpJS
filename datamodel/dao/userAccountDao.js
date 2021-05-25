@@ -12,6 +12,8 @@ module.exports = class UserAccountDAO extends BaseDAO{
                 .then(res => {
                     this.db.query(`INSERT INTO useraccount_has_role(id_role, id_useraccount) VALUES(1, $1) `, [res.rows[0].id])
                     resolve(res.rows[0])
+                    this.db.query(`INSERT INTO alert(title,text,date,useraccount_id,checked) VALUES ($1,$2,$3,$4,$5)`,
+                        [`Bienvenu ${useraccount.displayname} ! `, `Toute l'équipe de myShopList vous souhaite la bienvenu et une bonne découverte de l'application !`,new Date().toISOString(),res.rows[0].id, false] )
                 } )
                 .catch(e => {
                     console.log(e)

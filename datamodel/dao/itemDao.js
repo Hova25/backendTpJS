@@ -32,4 +32,16 @@ module.exports = class ItemDao extends BaseDAO {
         }
     }
 
+    getByPropertyNameAndValueWithLeftPartageList(propertyName, value, user){
+        return new Promise((resolve, reject) =>
+            this.db.query(`SELECT * FROM ${this.tablename} 
+            LEFT JOIN partagelist ON partagelist.id_list = ${this.tablename}.id_list
+            WHERE
+             ${this.tablename}.${propertyName}=$1 AND 
+             (${this.tablename}.useraccount_id=$2 OR partagelist.useraccount_id=$2 OR partagelist.owneruser_id=$2   )
+            ORDER BY ${this.tablename}.id`, [ value, user.id ])
+                .then(res => resolve(res.rows) )
+                .catch(e => reject(e)))
+    }
+
 }

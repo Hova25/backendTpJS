@@ -22,7 +22,7 @@ module.exports = (app, service, jwt) => {
             if(req.query.checked !== undefined ){
                 condition = ` checked = ${req.query.checked} `
             }
-            const alerts = await service.dao.getAll(req.user,false,condition )
+            const alerts = await service.dao.getAll(req.user,false,condition, "DESC" )
             res.json(alerts)
         }catch (e) {
             console.log(e)
