@@ -6,7 +6,7 @@ module.exports = class UserAccount {
         this.displayname = displayname
         this.login = login
         this.challenge = challenge
-        if(active!==undefined){
+        if(active!==undefined && (active === true || active === "true")){
             this.active = true
         }else{
             this.active = false

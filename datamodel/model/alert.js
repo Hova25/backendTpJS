@@ -5,7 +5,11 @@ module.exports = class Alert {
         this.title = title
         this.text = text
         this.date = date
-        this.checked = checked
+        if(checked!==undefined && (checked === true || checked === "true")){
+            this.checked = true
+        }else{
+            this.checked = false
+        }
     }
 
 

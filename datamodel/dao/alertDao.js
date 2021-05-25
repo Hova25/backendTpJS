@@ -1,6 +1,6 @@
 const BaseDAO = require('./basedao')
 
-module.exports = class RoleDao extends BaseDAO {
+module.exports = class AlertDao extends BaseDAO {
     constructor(db) {
         super(db, "alert")
     }
@@ -12,6 +12,19 @@ module.exports = class RoleDao extends BaseDAO {
                 .then(res => resolve(res.rows[0].id))
                 .catch(err => reject(err))
         }))
+    }
+
+    async updateCheck(id){
+        const alert = await this.getById(id)
+        if(alert!==undefined){
+            if(alert.checked===true) {
+                return this.db.query(`UPDATE ${this.tablename} SET checked=false WHERE id=$1 `,
+                    [id])
+            }else{
+                return this.db.query(`UPDATE ${this.tablename} SET checked=true WHERE id=$1 `,
+                    [id])
+            }
+        }
     }
 
 }

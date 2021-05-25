@@ -12,7 +12,7 @@ module.exports = class BaseDAO {
                 .then(res => resolve(res.rows[0]) )
                 .catch(e => reject(e)))
     }
-    getAll(user,noSecure){
+    getAll(user,noSecure, condition){
         let filterUserAccount = ""
         if(user!==undefined){
             filterUserAccount = `WHERE useraccount_id = ${user.id}`
@@ -21,8 +21,16 @@ module.exports = class BaseDAO {
                 filterUserAccount = "WHERE 1=0"
             }
         }
+        let where = ""
+        if(condition!==undefined){
+            if(filterUserAccount === ""){
+                where = condition
+            }else{
+                where = ` AND ${condition}`
+            }
+        }
         return new Promise(((resolve, reject) => {
-            this.db.query(`SELECT * from ${this.tablename} ${filterUserAccount} ORDER BY id`)
+            this.db.query(`SELECT * from ${this.tablename} ${filterUserAccount} ${where} ORDER BY id`)
                 .then(res=>resolve(res.rows))
                 .catch(err=> reject(err))
         }))

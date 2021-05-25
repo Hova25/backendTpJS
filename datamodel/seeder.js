@@ -21,7 +21,7 @@ module.exports = (listService, itemService,userAccountService, partageListServic
             const role1 = await roleService.dao.insert(new Role("Utilisateur", "Utilisateur lambda") )
             const role2 = await roleService.dao.insert(new Role("Administrateur", "Administrateur lambda") )
 
-            const userAccount1 =  await userAccountService.insert(`User1`,"user1@exemple.fr", "ex1")
+            const userAccount1 =  await userAccountService.insert(`User1`,"user1@exemple.fr", "ex1",true)
             const userAccount2 =  await userAccountService.insert(`User2`,"user2@exemple.fr", "ex2")
             await userAccountService.insert(`User3`,"user3@exemple.fr", "ex3")
             await userAccountService.insert(`User4`,"user4@exemple.fr", "ex4")
