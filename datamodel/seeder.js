@@ -15,7 +15,7 @@ module.exports = (listService, itemService,userAccountService, partageListServic
             await partageListService.dao.db.query(`CREATE TABLE ${partageListService.dao.tablename}(id SERIAL PRIMARY KEY, id_list INTEGER REFERENCES list (id), owneruser_id INTEGER REFERENCES useraccount(id),useraccount_id INTEGER REFERENCES useraccount(id), edit BOOLEAN DEFAULT FALSE)`)
             await roleService.dao.db.query(`CREATE TABLE ${roleService.dao.tablename}(id SERIAL PRIMARY KEY, name TEXT NOT NULL, description TEXT NOT NULL)`)
             await userAccountHasRoleService.dao.db.query(`CREATE TABLE ${userAccountHasRoleService.dao.tablename}(id_role INTEGER REFERENCES role(id),id_useraccount INTEGER REFERENCES useraccount(id))`)
-            await alertService.dao.db.query(`CREATE TABLE ${alertService.dao.tablename}(id SERIAL PRIMARY KEY,useraccount_id INTEGER REFERENCES useraccount(id), title TEXT NOT NULL, text TEXT NOT NULL, date DATE NOT NULL, checked BOOLEAN DEFAULT FALSE)`)
+            await alertService.dao.db.query(`CREATE TABLE ${alertService.dao.tablename}(id SERIAL PRIMARY KEY,useraccount_id INTEGER REFERENCES useraccount(id), title TEXT NOT NULL, text TEXT NOT NULL, date DATE NOT NULL DEFAULT CURRENT_DATE, checked BOOLEAN DEFAULT FALSE)`)
 
             // INSERTs
             const role1 = await roleService.dao.insert(new Role("Utilisateur", "Utilisateur lambda") )
@@ -23,9 +23,9 @@ module.exports = (listService, itemService,userAccountService, partageListServic
 
             const userAccount1 =  await userAccountService.insert(`User1`,"user1@exemple.fr", "ex1",true)
             const userAccount2 =  await userAccountService.insert(`User2`,"user2@exemple.fr", "ex2",true)
-            await userAccountService.insert(`User3`,"user3@exemple.fr", "ex3")
-            await userAccountService.insert(`User4`,"user4@exemple.fr", "ex4")
-            await userAccountService.insert(`User5`,"user5@exemple.fr", "ex5")
+            await userAccountService.insert(`User3`,"user3@exemple.fr", "ex3",true)
+            await userAccountService.insert(`User4`,"user4@exemple.fr", "ex4",true)
+            await userAccountService.insert(`User5`,"user5@exemple.fr", "ex5",true)
             await userAccountService.insert(`User6`,"user6@exemple.fr", "ex6")
 
             await userAccountHasRoleService.dao.insert(new UserAccountHasRole(role2,userAccount1.id ))

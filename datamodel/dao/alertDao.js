@@ -18,10 +18,10 @@ module.exports = class AlertDao extends BaseDAO {
         const alert = await this.getById(id)
         if(alert!==undefined){
             if(alert.checked===true) {
-                return this.db.query(`UPDATE ${this.tablename} SET checked=false WHERE id=$1 `,
+                return await this.db.query(`UPDATE ${this.tablename} SET checked=false WHERE id=$1 `,
                     [id])
             }else{
-                return this.db.query(`UPDATE ${this.tablename} SET checked=true WHERE id=$1 `,
+                return await this.db.query(`UPDATE ${this.tablename} SET checked=true WHERE id=$1 `,
                     [id])
             }
         }

@@ -1,13 +1,14 @@
 const utile = require('./utile')()
-
-module.exports = (app, service, jwt) => {
+const Alert = require('../datamodel/model/alert')
+module.exports = (app, service, listService,alertService, jwt) => {
     app.get("/item",jwt.validateJWT ,async (req, res) => {
         res.json(await service.dao.getAll(req.user))
     })
     app.get("/item/:id",jwt.validateJWT ,async (req, res) => {
         try {
-            const item = await service.dao.getById(req.params.id)
-            utile.verif(req,res,item)
+            // const item = await service.dao.getById(req.params.id)
+            // utile.verif(req,res,item)
+            const item = await service.dao.getByPropertyNameAndValueWithLeftPartageList("id", req.params.id, req.user )
             return res.json(item)
         }catch (e) {
             res.status(400).end()
@@ -32,8 +33,12 @@ module.exports = (app, service, jwt) => {
             }
             const prevItem = await service.dao.getById(item.id)
             utile.verif(req,res,prevItem)
+
             service.dao.update(item)
-                .then(res.status(200).end())
+                .then(async _ => {
+                    utile.insertAlertModificationList(prevItem.id_list, req.user,listService,alertService,Alert)
+                    res.status(200).end()
+                })
                 .catch(err => {
                     console.log(err)
                     res.status(500).end()
@@ -52,7 +57,10 @@ module.exports = (app, service, jwt) => {
             }
             item.useraccount_id = req.user.id
             service.dao.insert(item)
-                .then(_ => res.status(200).end())
+                .then(async _ => {
+                    utile.insertAlertModificationList(item.id_list, req.user,listService,alertService,Alert)
+                    res.status(200).end()
+                })
                 .catch(err => {
                     console.log(err)
                     res.status(500).end()
@@ -66,11 +74,14 @@ module.exports = (app, service, jwt) => {
     app.patch("/item/:id",jwt.validateJWT, async (req, res) => {
         try{
             const itemId = req.params.id
-            const prevItem = await service.dao.getById(itemId)
-            utile.verif(req,res,prevItem)
+            const prevItem = await service.dao.getById(itemId, req.user)
+            // utile.verif(req,res,prevItem)
 
             service.dao.updateCheck(itemId)
-                .then(res.status(200).end())
+                .then(async _ => {
+                    utile.insertAlertModificationList(prevItem.id_list, req.user,listService,alertService,Alert)
+                    res.status(200).end()
+                })
                 .catch(err => {
                     console.log(err)
                     res.status(500).end()
@@ -84,9 +95,12 @@ module.exports = (app, service, jwt) => {
     app.delete("/item/:id",jwt.validateJWT, async (req, res) => {
         try {
             const item = await service.dao.getById(req.params.id)
-            utile.verif(req,res,item)
+            // utile.verif(req,res,item)
             service.dao.delete(req.params.id)
-                .then(res.status(200).end())
+                .then(async _ => {
+                    utile.insertAlertModificationList(item.id_list, req.user,listService,alertService,Alert)
+                    res.status(200).end()
+                })
                 .catch(err => {
                     console.log(err)
                     res.status(500).end()

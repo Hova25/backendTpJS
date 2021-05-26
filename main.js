@@ -61,7 +61,7 @@ require('./api/mailer')(app)
 
 
 require('./api/list')(app, listS, partageListS, jwt)
-require('./api/item')(app, itemS, jwt)
+require('./api/item')(app, itemS, listS,alertS, jwt)
 require('./api/useraccount')(app, userAccountS, jwt)
 require('./api/partageList')(app, partageListS, jwt)
 require('./api/role')(app, roleS, jwt)

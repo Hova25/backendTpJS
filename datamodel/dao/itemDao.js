@@ -31,10 +31,21 @@ module.exports = class ItemDao extends BaseDAO {
             }
         }
     }
+    // getById(itemId,user){
+    //     if(user !== undefined){
+    //         return this.getByPropertyNameAndValueWithLeftPartageList("id", itemId, user)
+    //     }else{
+    //         return new Promise((resolve, reject) =>
+    //             this.db.query(`SELECT * FROM ${this.tablename} WHERE id=$1`, [ itemId ])
+    //                 .then(res => resolve(res.rows[0]) )
+    //                 .catch(e => reject(e)))
+    //     }
+    //
+    // }
 
     getByPropertyNameAndValueWithLeftPartageList(propertyName, value, user){
         return new Promise((resolve, reject) =>
-            this.db.query(`SELECT * FROM ${this.tablename} 
+            this.db.query(`SELECT ${this.tablename}.* FROM ${this.tablename} 
             LEFT JOIN partagelist ON partagelist.id_list = ${this.tablename}.id_list
             WHERE
              ${this.tablename}.${propertyName}=$1 AND 

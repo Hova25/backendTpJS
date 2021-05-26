@@ -4,7 +4,11 @@ module.exports = class Alert {
         this.useraccount_id = useraccount_id
         this.title = title
         this.text = text
-        this.date = date
+        if(date===undefined){
+            this.date = new Date().toISOString()
+        }else{
+            this.date = date
+        }
         if(checked!==undefined && (checked === true || checked === "true")){
             this.checked = true
         }else{

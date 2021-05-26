@@ -38,6 +38,13 @@ module.exports = () => {
         },
         getSiteBaseUrl(){
             return "http://localhost:63342/tp01frontF/"
+        },
+        async insertAlertModificationList(id_list,current_user,listService, alertService,Alert){
+            let list = await listService.dao.getById(id_list)
+            if(list.useraccount_id !== current_user.id) {
+                await alertService.dao.insert(new Alert(list.useraccount_id, `Une liste a été modifié `, `Votre liste : ${list.shop} a été modifié par ${current_user.displayname}`))
+            }
         }
+
     }
 }

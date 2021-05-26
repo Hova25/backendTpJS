@@ -38,7 +38,9 @@ module.exports = (app, service, jwt) => {
             utile.verif(req,res,prevItem)
 
             service.dao.updateCheck(alertId)
-                .then(res.status(200).end())
+                .then(_ => {
+                    res.status(200).end()
+            })
                 .catch(err => {
                     console.log(err)
                     res.status(500).end()
