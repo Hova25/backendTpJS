@@ -6,7 +6,7 @@ module.exports = (app, service, jwt) => {
     const url = "/role"
     app.get(`${url}`,async (req, res) => {
         if(req.query.useraccount_id!==undefined){
-            res.json(await service.daoUserAccountHasRole.getRolesByIdUserAccount(req.query.useraccount_id))
+            res.json(await service.daoUserAccountHasRole.getRolesByIdUserAccount(req.query.useraccount_id,req.query.role_id))
         }else{
             res.json(await service.dao.getAll(undefined, true))
         }
