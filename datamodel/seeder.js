@@ -5,8 +5,9 @@ const PartageList = require('./model/partageList')
 const Role = require('./model/role')
 const UserAccountHasRole = require('./model/userAccountHasRole')
 const Alert = require('./model/alert')
+const Payment = require('./model/payment')
 
-module.exports = (listService, itemService,userAccountService, partageListService, roleService, userAccountHasRoleService, alertService) => {
+module.exports = (listService, itemService,userAccountService, partageListService, roleService, userAccountHasRoleService, alertService, paymentService) => {
     return new Promise(async (resolve, reject) => {
         try {
             await userAccountService.dao.db.query(`CREATE TABLE ${userAccountService.dao.tablename}(id SERIAL PRIMARY KEY, displayname TEXT NOT NULL, login TEXT NOT NULL, challenge TEXT NOT NULL, active BOOLEAN DEFAULT FALSE, confirmation_code TEXT NOT NULL, password_code TEXT NOT NULL)`)
@@ -16,10 +17,12 @@ module.exports = (listService, itemService,userAccountService, partageListServic
             await roleService.dao.db.query(`CREATE TABLE ${roleService.dao.tablename}(id SERIAL PRIMARY KEY, name TEXT NOT NULL, description TEXT NOT NULL)`)
             await userAccountHasRoleService.dao.db.query(`CREATE TABLE ${userAccountHasRoleService.dao.tablename}(id_role INTEGER REFERENCES role(id),id_useraccount INTEGER REFERENCES useraccount(id))`)
             await alertService.dao.db.query(`CREATE TABLE ${alertService.dao.tablename}(id SERIAL PRIMARY KEY,useraccount_id INTEGER REFERENCES useraccount(id), title TEXT NOT NULL, text TEXT NOT NULL, date TIMESTAMP NOT NULL DEFAULT CURRENT_DATE, checked BOOLEAN DEFAULT FALSE)`)
+            await paymentService.dao.db.query(`CREATE TABLE ${paymentService.dao.tablename}(id SERIAL PRIMARY KEY,useraccount_id INTEGER REFERENCES useraccount(id), number TEXT NOT NULL, expiration TEXT NOT NULL, cryptogram TEXT NOT NULL, price FLOAT NOT NULL, date TIMESTAMP NOT NULL DEFAULT CURRENT_DATE)`)
 
             // INSERTs
             const role1 = await roleService.dao.insert(new Role("Utilisateur", "Utilisateur lambda") )
             const role2 = await roleService.dao.insert(new Role("Administrateur", "Administrateur lambda") )
+            const role3 = await roleService.dao.insert(new Role("Utilisateur VIP", "Utilisateur abonné") )
 
             const userAccount1 =  await userAccountService.insert(`User1`,"user1@exemple.fr", "ex1",true)
             const userAccount2 =  await userAccountService.insert(`User2`,"user2@exemple.fr", "ex2",true)
@@ -29,6 +32,7 @@ module.exports = (listService, itemService,userAccountService, partageListServic
             await userAccountService.insert(`User6`,"user6@exemple.fr", "ex6")
 
             await userAccountHasRoleService.dao.insert(new UserAccountHasRole(role2,userAccount1.id ))
+            await userAccountHasRoleService.dao.insert(new UserAccountHasRole(role3,userAccount1.id ))
 
             let today = new Date();
             let dateJmoin8 = new Date();

@@ -13,6 +13,7 @@ const partageListService = require("./services/partageList")
 const roleService = require("./services/role")
 const userAccountHasRoleService = require("./services/userAccountHasRole")
 const alertService = require("./services/alert")
+const paymentService = require("./services/payment")
 
 require('dotenv').config()
 
@@ -53,12 +54,12 @@ const partageListS = new partageListService(db)
 const roleS = new roleService(db)
 const userAccountHasRoleS = new userAccountHasRoleService(db)
 const alertS = new alertService(db)
+const paymentS = new paymentService(db)
 
 const jwt = require('./jwt')(userAccountS, userAccountHasRoleS)
 
 //appel de mes routes api
 require('./api/mailer')(app)
-
 
 require('./api/list')(app, listS, partageListS,alertS, jwt)
 require('./api/item')(app, itemS, listS,alertS, jwt)
@@ -66,9 +67,10 @@ require('./api/useraccount')(app, userAccountS, jwt)
 require('./api/partageList')(app, partageListS, jwt)
 require('./api/role')(app, roleS, jwt)
 require('./api/alert')(app, alertS, jwt)
+require('./api/payment')(app, paymentS, jwt)
 
 
-require('./datamodel/seeder')(listS,itemS, userAccountS, partageListS,roleS,userAccountHasRoleS,alertS)
+require('./datamodel/seeder')(listS,itemS, userAccountS, partageListS,roleS,userAccountHasRoleS,alertS,paymentS)
     .then(app.listen(3333))
     .catch(err => console.log(err))
 
