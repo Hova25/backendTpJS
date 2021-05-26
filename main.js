@@ -67,7 +67,7 @@ require('./api/useraccount')(app, userAccountS, jwt)
 require('./api/partageList')(app, partageListS, jwt)
 require('./api/role')(app, roleS, jwt)
 require('./api/alert')(app, alertS, jwt)
-require('./api/payment')(app, paymentS, jwt)
+require('./api/payment')(app, paymentS,userAccountHasRoleS,alertS, jwt)
 
 
 require('./datamodel/seeder')(listS,itemS, userAccountS, partageListS,roleS,userAccountHasRoleS,alertS,paymentS)

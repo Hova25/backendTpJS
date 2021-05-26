@@ -1,5 +1,5 @@
-module.exports = class List {
-    constructor(id,useraccount_id,number,expiration,cryptogram ,price,date) {
+module.exports = class Payment {
+    constructor(useraccount_id,number,expiration,cryptogram ,price,date) {
         this.id = null
         this.useraccount_id = useraccount_id
         this.number = number
