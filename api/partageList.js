@@ -1,6 +1,6 @@
 const utile = require('./utile')()
 
-module.exports = (app, service, jwt) => {
+module.exports = (app, service,serviceUserAccountHasRole, jwt) => {
     const url = "/partagelist"
     app.get(`${url}`, jwt.validateJWT,async (req, res) => {
         res.json(await service.dao.getAll(req.user))
@@ -43,9 +43,12 @@ module.exports = (app, service, jwt) => {
             if (!service.isValid(partageList) ){
                 return res.status(400).end()
             }
+            await utile.verifVipRole(req.user, serviceUserAccountHasRole, res)
             partageList.owneruser_id = req.user.id
             service.dao.insert(partageList)
-                .then( res.status(200).end())
+                .then(_ => {
+                    res.status(200).end()
+                })
                 .catch(err => {
                     console.log(err)
                     res.status(500).end()
@@ -64,7 +67,9 @@ module.exports = (app, service, jwt) => {
             utile.verifByOwner(req,res,prevPartageList)
 
             service.dao.updateEdit(prevPartageList)
-                .then(res.status(200).end())
+                .then(_ => {
+                    res.status(200).end()
+                })
                 .catch(err => {
                     console.log(err)
                     res.status(500).end()
@@ -80,7 +85,9 @@ module.exports = (app, service, jwt) => {
             const partageList = await service.dao.getById(req.params.id)
             utile.verifByOwner(req,res,partageList)
             service.dao.delete(req.params.id)
-                .then(res.status(200).end())
+                .then(_ => {
+                    res.status(200).end()
+                })
                 .catch(err => {
                     console.log(err)
                     res.status(500).end()

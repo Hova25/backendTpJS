@@ -5,7 +5,7 @@ module.exports = () => {
                 return res.status(404).end()
             }
             if (item.useraccount_id !== req.user.id) {
-                return res.status(403).end()
+                return res.status(401).end()
             }
         },
         verifByOwner(req, res, item) {
@@ -54,6 +54,19 @@ module.exports = () => {
                 await alertService.dao.insert(new Alert(list.useraccount_id, `Une liste a périmé `, text))
             }
         },
+        async verifUserCanCreateList(user,serviceList,serviceUserAccountHasRole,res){
+            const userRole = await serviceUserAccountHasRole.dao.getRolesByIdUserAccount(user.id,3)
+            const noArchivedList = await serviceList.dao.getAllNoArchived(user)
+            if(userRole.length === 0 && noArchivedList.length >= 1 ){
+                return res.status(401).end()
+            }
+        },
+        async verifVipRole(user,serviceUserAccountHasRole,res){
+            const userRole = await serviceUserAccountHasRole.dao.getRolesByIdUserAccount(user.id,3)
+            if(userRole.length === 0 ){
+                return res.status(401).end()
+            }
+        }
 
     }
 }

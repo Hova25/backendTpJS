@@ -61,10 +61,10 @@ const jwt = require('./jwt')(userAccountS, userAccountHasRoleS)
 //appel de mes routes api
 require('./api/mailer')(app)
 
-require('./api/list')(app, listS, partageListS,alertS, jwt)
+require('./api/list')(app, listS, partageListS,alertS,userAccountHasRoleS, jwt)
 require('./api/item')(app, itemS, listS,alertS, jwt)
 require('./api/useraccount')(app, userAccountS, jwt)
-require('./api/partageList')(app, partageListS, jwt)
+require('./api/partageList')(app, partageListS,userAccountHasRoleS, jwt)
 require('./api/role')(app, roleS, jwt)
 require('./api/alert')(app, alertS, jwt)
 require('./api/payment')(app, paymentS,userAccountHasRoleS,alertS, jwt)
