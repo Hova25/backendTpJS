@@ -7,7 +7,7 @@ module.exports = class ListDao extends BaseDAO {
 
     getAllNoArchived(user){
         return new Promise(((resolve, reject) => {
-            this.db.query(`SELECT * from ${this.tablename} WHERE archived = false AND useraccount_id = $1 AND deleted = false ORDER BY date DESC, id DESC`, [user.id])
+            this.db.query(`SELECT * from ${this.tablename} WHERE archived = false AND useraccount_id = $1 AND deleted = false ORDER BY date ASC, id DESC`, [user.id])
                 .then(res=>resolve(res.rows))
                 .catch(err=> reject(err))
         }))
