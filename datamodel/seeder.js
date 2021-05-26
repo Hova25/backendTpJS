@@ -10,7 +10,7 @@ module.exports = (listService, itemService,userAccountService, partageListServic
     return new Promise(async (resolve, reject) => {
         try {
             await userAccountService.dao.db.query(`CREATE TABLE ${userAccountService.dao.tablename}(id SERIAL PRIMARY KEY, displayname TEXT NOT NULL, login TEXT NOT NULL, challenge TEXT NOT NULL, active BOOLEAN DEFAULT FALSE, confirmation_code TEXT NOT NULL, password_code TEXT NOT NULL)`)
-            await listService.dao.db.query(`CREATE TABLE ${listService.dao.tablename}(id SERIAL PRIMARY KEY, shop TEXT NOT NULL, date DATE NOT NULL, archived BOOLEAN DEFAULT FALSE, useraccount_id INTEGER REFERENCES useraccount(id))`)
+            await listService.dao.db.query(`CREATE TABLE ${listService.dao.tablename}(id SERIAL PRIMARY KEY, shop TEXT NOT NULL, date TIMESTAMP NOT NULL, archived BOOLEAN DEFAULT FALSE, useraccount_id INTEGER REFERENCES useraccount(id), deleted BOOLEAN DEFAULT FALSE)`)
             await itemService.dao.db.query(`CREATE TABLE ${itemService.dao.tablename}(id SERIAL PRIMARY KEY, id_list INTEGER REFERENCES list (id),label TEXT NOT NULL, quantity INTEGER NOT NULL, checked BOOLEAN DEFAULT FALSE, useraccount_id INTEGER REFERENCES useraccount(id))`)
             await partageListService.dao.db.query(`CREATE TABLE ${partageListService.dao.tablename}(id SERIAL PRIMARY KEY, id_list INTEGER REFERENCES list (id), owneruser_id INTEGER REFERENCES useraccount(id),useraccount_id INTEGER REFERENCES useraccount(id), edit BOOLEAN DEFAULT FALSE)`)
             await roleService.dao.db.query(`CREATE TABLE ${roleService.dao.tablename}(id SERIAL PRIMARY KEY, name TEXT NOT NULL, description TEXT NOT NULL)`)

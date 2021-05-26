@@ -119,7 +119,9 @@ module.exports = (app, service, servicePartageList,serviceAlert, jwt) => {
             const list = await service.dao.getById(req.params.id)
             utile.verif(req,res,list)
             service.dao.delete(req.params.id)
-                .then(res.status(200).end())
+                .then(_ => {
+                    res.status(200).end()
+                })
                 .catch(err => {
                     console.log(err)
                     res.status(500).end()
@@ -129,4 +131,23 @@ module.exports = (app, service, servicePartageList,serviceAlert, jwt) => {
             res.status(400).end()
         }
     })
+
+    app.delete("/list/undo/:id", jwt.validateJWT, async (req, res) => {
+        try{
+            const list = await service.dao.getById(req.params.id)
+            utile.verif(req,res,list)
+            service.dao.undoDelete(req.params.id)
+                .then(_ => {
+                    res.status(200).end()
+                })
+                .catch(err => {
+                    console.log(err)
+                    res.status(500).end()
+                })
+        }catch (err) {
+            console.log(err)
+            res.status(400).end()
+        }
+    })
+
 }

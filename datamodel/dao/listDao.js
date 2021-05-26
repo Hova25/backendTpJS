@@ -7,7 +7,7 @@ module.exports = class ListDao extends BaseDAO {
 
     getAllNoArchived(user){
         return new Promise(((resolve, reject) => {
-            this.db.query(`SELECT * from ${this.tablename} WHERE archived = false AND useraccount_id = $1 ORDER BY date DESC, id DESC`, [user.id])
+            this.db.query(`SELECT * from ${this.tablename} WHERE archived = false AND useraccount_id = $1 AND deleted = false ORDER BY date DESC, id DESC`, [user.id])
                 .then(res=>resolve(res.rows))
                 .catch(err=> reject(err))
         }))
@@ -17,14 +17,14 @@ module.exports = class ListDao extends BaseDAO {
         let dateJmoin7 = new Date();
         dateJmoin7.setDate(today.getDate()-7)
         return new Promise(((resolve, reject) => {
-            this.db.query(`SELECT * from ${this.tablename} WHERE archived = false AND useraccount_id = $1 AND date < $2  ORDER BY date DESC, id DESC`, [user.id, dateJmoin7])
+            this.db.query(`SELECT * from ${this.tablename} WHERE archived = false AND useraccount_id = $1 AND date < $2  AND deleted = false ORDER BY date DESC, id DESC`, [user.id, dateJmoin7])
                 .then(res=>resolve(res.rows))
                 .catch(err=> reject(err))
         }))
     }
     getAllArchived(user){
         return new Promise(((resolve, reject) => {
-            this.db.query(`SELECT * from ${this.tablename} WHERE archived = true AND useraccount_id = $1 ORDER BY date DESC, id DESC`, [user.id])
+            this.db.query(`SELECT * from ${this.tablename} WHERE archived = true AND useraccount_id = $1  AND deleted = false ORDER BY date DESC, id DESC`, [user.id])
                 .then(res=>resolve(res.rows))
                 .catch(err=> reject(err))
         }))
@@ -52,9 +52,15 @@ module.exports = class ListDao extends BaseDAO {
             [id])
     }
 
+    // async delete(id){
+    //     await this.db.query(`DELETE FROM item WHERE id_list=$1`, [id])
+    //     return this.db.query(`DELETE FROM ${this.tablename} WHERE id=$1`, [id])
+    // }
     async delete(id){
-        await this.db.query(`DELETE FROM item WHERE id_list=$1`, [id])
-        return this.db.query(`DELETE FROM ${this.tablename} WHERE id=$1`, [id])
+        return await this.db.query(`UPDATE ${this.tablename} SET deleted = true WHERE id=$1`, [id])
+    }
+    async undoDelete(id){
+        return await this.db.query(`UPDATE ${this.tablename} SET deleted = false WHERE id=$1`, [id])
     }
 
 
