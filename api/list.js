@@ -1,11 +1,16 @@
 const utile = require('./utile')()
+const Alert = require('../datamodel/model/alert')
 
-module.exports = (app, service, servicePartageList, jwt) => {
+module.exports = (app, service, servicePartageList,serviceAlert, jwt) => {
     app.get("/list", jwt.validateJWT,async (req, res) => {
         res.json(await service.dao.getAll(req.user))
     })
     app.get("/list/no_archived", jwt.validateJWT, async (req, res) => {
         const user = req.user
+        const allExpiredNoArchivedList = await service.dao.getAllExpiredNoArchived(user)
+        for(list of allExpiredNoArchivedList){
+            await utile.insertAlertExpireList(list, service, serviceAlert,Alert)
+        }
         res.json(await service.dao.getAllNoArchived(user))
     })
     app.get("/list/archived", jwt.validateJWT, async (req, res) => {

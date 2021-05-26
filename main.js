@@ -60,7 +60,7 @@ const jwt = require('./jwt')(userAccountS, userAccountHasRoleS)
 require('./api/mailer')(app)
 
 
-require('./api/list')(app, listS, partageListS, jwt)
+require('./api/list')(app, listS, partageListS,alertS, jwt)
 require('./api/item')(app, itemS, listS,alertS, jwt)
 require('./api/useraccount')(app, userAccountS, jwt)
 require('./api/partageList')(app, partageListS, jwt)

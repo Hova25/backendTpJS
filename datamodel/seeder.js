@@ -30,9 +30,13 @@ module.exports = (listService, itemService,userAccountService, partageListServic
 
             await userAccountHasRoleService.dao.insert(new UserAccountHasRole(role2,userAccount1.id ))
 
+            let today = new Date();
+            let dateJmoin8 = new Date();
+            dateJmoin8.setDate(today.getDate()-8)
 
             for(let i=0; i<5; i++){
                 const listId = await listService.dao.insert(new List(`ShopUser1${i}`, new Date(), false, userAccount1.id))
+                await listService.dao.insert(new List(`ShopUserExpire1${i}`, dateJmoin8.toISOString(), false, userAccount1.id))
                 if(i%2===0){
                     await partageListService.dao.insert(new PartageList(listId,userAccount1.id,userAccount2.id,true))
                 }else {

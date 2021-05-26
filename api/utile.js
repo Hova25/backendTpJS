@@ -41,10 +41,19 @@ module.exports = () => {
         },
         async insertAlertModificationList(id_list,current_user,listService, alertService,Alert){
             let list = await listService.dao.getById(id_list)
-            if(list.useraccount_id !== current_user.id) {
-                await alertService.dao.insert(new Alert(list.useraccount_id, `Une liste a été modifié `, `Votre liste : ${list.shop} a été modifié par ${current_user.displayname}`))
+            const text = `Votre liste : ${list.shop} a été modifié par ${current_user.displayname}`
+            const alert = await alertService.dao.getByTextAndCheckedFalseAndUserAccountId(text,list.useraccount_id)
+            if(list.useraccount_id !== current_user.id && alert.length === 0 ) {
+                await alertService.dao.insert(new Alert(list.useraccount_id, `Une liste a été modifié `, text))
             }
-        }
+        },
+        async insertAlertExpireList(list,listService, alertService,Alert){
+            const text = `Votre liste : ${list.shop} a périmé. Vous pouvez la supprimer ou l'archivé !`
+            const alert = await alertService.dao.getByTextAndCheckedFalseAndUserAccountId(text,list.useraccount_id)
+            if(alert.length === 0 ) {
+                await alertService.dao.insert(new Alert(list.useraccount_id, `Une liste a périmé `, text))
+            }
+        },
 
     }
 }

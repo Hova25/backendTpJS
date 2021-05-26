@@ -26,5 +26,11 @@ module.exports = class AlertDao extends BaseDAO {
             }
         }
     }
+    getByTextAndCheckedFalseAndUserAccountId(text, useraccount_id) {
+        return new Promise((resolve, reject) =>
+            this.db.query(`SELECT * FROM ${this.tablename} WHERE text LIKE $1 AND checked=false AND useraccount_id=$2`, [ text, useraccount_id ])
+                .then(res => resolve(res.rows) )
+                .catch(e => reject(e)))
+    }
 
 }
