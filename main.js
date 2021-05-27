@@ -24,7 +24,7 @@ app.use(bodyParser.json()) // application/json
 app.use(cors())
 app.use(morgan('dev')); // toutes les requêtes HTTP dans le log du serveur
 
-const connectionString = "postgres://user1:root@localhost/base1"
+const connectionString = `postgres://${process.env.DB_USERNAME}:${process.env.DB_PASS}@${process.env.DB_HOST}/${process.env.DB_NAME}`
 const db = new pg.Pool({ connectionString: connectionString })
 
 // creation variable service
@@ -36,14 +36,14 @@ app.set('views', __dirname + '/views');
 app.set('view engine', 'html');
 
 mailer.extend(app, {
-    from: 'projet.hova.esimed@gmail.com',
-    host: 'smtp.gmail.com', // hostname
+    from: process.env.MAILER_FROM,
+    host: process.env.MAILER_HOST, // hostname
     secureConnection: true, // use SSL
-    port: 465, // port for secure SMTP
-    transportMethod: 'SMTP', // default is SMTP. Accepts anything that nodemailer accepts
+    port: process.env.MAILER_PORT, // port for secure SMTP
+    transportMethod: process.env.MAILER_METHOD, // default is SMTP. Accepts anything that nodemailer accepts
     auth: {
-        user: 'projet.hova.esimed@gmail.com',
-        pass: 'Projethova*'
+        user: process.env.MAILER_EMAIL,
+        pass: process.env.MAILER_PASSWORD
     }
 });
 
@@ -73,7 +73,7 @@ require('./api/payment')(app, paymentS,userAccountHasRoleS,alertS, jwt)
 
 
 require('./datamodel/seeder')(listS,itemS, userAccountS, partageListS,roleS,userAccountHasRoleS,alertS,paymentS)
-    .then(app.listen(3333))
+    .then(app.listen(process.env.APP_PORT))
     .catch(err => console.log(err))
 
 
