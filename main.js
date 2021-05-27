@@ -14,6 +14,7 @@ const roleService = require("./services/role")
 const userAccountHasRoleService = require("./services/userAccountHasRole")
 const alertService = require("./services/alert")
 const paymentService = require("./services/payment")
+const mailerService = require("./services/mailer")
 
 require('dotenv').config()
 
@@ -55,11 +56,12 @@ const roleS = new roleService(db)
 const userAccountHasRoleS = new userAccountHasRoleService(db)
 const alertS = new alertService(db)
 const paymentS = new paymentService(db)
+const mailerS = new mailerService()
 
 const jwt = require('./jwt')(userAccountS, userAccountHasRoleS)
 
 //appel de mes routes api
-require('./api/mailer')(app)
+require('./api/mailer')(app, mailerS)
 
 require('./api/list')(app, listS, partageListS,alertS,userAccountHasRoleS, jwt)
 require('./api/item')(app, itemS, listS,alertS, jwt)

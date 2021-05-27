@@ -1,6 +1,6 @@
 const utile = require('./utile')()
 
-module.exports = (app) => {
+module.exports = (app, service) => {
     app.post('/mailer/validation_account', (req, res, next) => {
         app.mailer.send('validateEmail', {
             to: `${req.body.login}`,
@@ -37,5 +37,26 @@ module.exports = (app) => {
             res.send('Email Sent');
         });
     })
+
+    app.post('/mailer/subscription', (req,res)=> {
+        service.subscriptionEmail(app,req,res)
+    })
+    // app.post('/mailer/subscription', (req,res)=> {
+    //     app.mailer.send('subscription_email', {
+    //         to: `${req.body.login}`,
+    //         subject: 'MyShopList - Abonnement',
+    //         otherProperty: 'Other Property',
+    //         name:req.body.displayname,
+    //     }, function (err) {
+    //         if (err) {
+    //             // handle error
+    //             console.log(err);
+    //             res.send('There was an error sending the email');
+    //             return;
+    //         }
+    //         res.send('Email Sent');
+    //     });
+    // })
+
 
 }
