@@ -15,6 +15,7 @@ module.exports = class AlertDao extends BaseDAO {
     }
 
     async updateCheck(id){
+        console.log('test')
         const alert = await this.getById(id)
         if(alert!==undefined){
             if(alert.checked===true) {
