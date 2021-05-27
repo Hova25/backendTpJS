@@ -1,3 +1,3 @@
 npm install
 
-n'oubliez pas de modifiez le .env
+n'oubliez pas de modifier le .env
