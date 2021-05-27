@@ -63,13 +63,13 @@ module.exports = (app, service, servicePartageList,serviceAlert,serviceUserAccou
         try {
             const list = req.body
             const user = req.user
+            list.useraccount_id = user.id
             if (!service.isValid(list) ){
                 return res.status(400).end()
             }
             utile.verif(req,res,list)
             await utile.verifUserCanCreateList(req.user,service,serviceUserAccountHasRole,res)
 
-            list.useraccount_id = user.id
             service.dao.insert(list)
                 .then(id => res.json(id))
                 .catch(err => {
