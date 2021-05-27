@@ -37,7 +37,7 @@ module.exports = () => {
             return test
         },
         getSiteBaseUrl(){
-            return "http://localhost:63342/tp01frontF/"
+            return process.env.APP_FRONT_URL
         },
         async insertAlertModificationList(id_list,current_user,listService, alertService,Alert){
             let list = await listService.dao.getById(id_list)
