@@ -16,12 +16,21 @@ module.exports = (app, service, jwt) => {
                 res.status(500).end()
             })
     }
+
     app.get('/useraccount/refresh_token',jwt.validateJWT,(req,res)=>{
         if(req.user!==undefined){
             res.json({'token': jwt.generateJWT(req.user.login)})
         }else{
             res.status(400).end()
         }
+    })
+
+    app.get('/useraccount/test',(req,res)=>{
+            res.json({
+                'test': 'ceci est un test ',
+                'user_account':'pas de user account'
+            })
+
     })
 
     app.post('/useraccount/authenticate', (req,res) => {
