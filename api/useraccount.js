@@ -264,10 +264,14 @@ module.exports = (app, service, jwt) => {
         }
     })
 
-    app.post('/useraccount/signup', (req,res)=>{
+    app.post('/useraccount/signup',async (req,res)=>{
         if(req.body.displayname==='' && req.body.login==='' && req.body.challenge===''){
             res.status(400).end()
             return
+        }
+        const testIfExist = await service.dao.getByLogin(req.body.login)
+        if(testIfExist!==undefined){
+            res.status(401).end()
         }
         service.insert(req.body.displayname, req.body.login, req.body.challenge)
             .then(_ => {
