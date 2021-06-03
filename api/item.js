@@ -59,7 +59,8 @@ module.exports = (app, service, listService,alertService, jwt) => {
             service.dao.insert(item)
                 .then(async _ => {
                     utile.insertAlertModificationList(item.id_list, req.user,listService,alertService,Alert)
-                    res.status(200).end()
+                    res.json(item)
+                    //res.status(200).end()
                 })
                 .catch(err => {
                     console.log(err)
