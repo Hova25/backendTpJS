@@ -38,8 +38,24 @@ module.exports = (app, service,serviceUserAccountHasRole,serviceList,serviceUser
                 return res.json(partagedList[0])
             }
             else{
-                const partagedList = await service.dao.getByListIdAndOwnerId( req.params.id_list, req.user.id)
-                return res.json(partagedList)
+                let partagedLists = await service.dao.getByListIdAndOwnerId( req.params.id_list, req.user.id)
+                if(req.query.show_useraccount!==undefined){
+                    for(partagedList of partagedLists){
+                        partagedList.useraccount = await serviceUserAccount.dao.getById(partagedList.useraccount_id)
+                        partagedList.useraccount.challenge = undefined
+                        partagedList.useraccount.confirmation_code = undefined
+                        partagedList.useraccount.password_code = undefined
+                        partagedList.useraccount.active = undefined
+                        if(req.query.just_useraccount !== undefined) {
+                            partagedList.useraccount.edit = partagedList.edit
+                        }
+                    }
+                    if(req.query.just_useraccount !== undefined){
+                        partagedLists = utile.array_column(partagedLists, "useraccount")
+                    }
+                }
+
+                return res.json(partagedLists)
             }
         }
         catch (e) {
