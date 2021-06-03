@@ -8,10 +8,13 @@ module.exports = (app, service,serviceUserAccountHasRole,serviceList,serviceUser
     app.get(`${url}/partaged`,jwt.validateJWT, async (req, res ) => {
         try{
             if(req.user.id!==undefined){
-                const partagedLists = await service.dao.getByListIdAndUserAccountId(undefined ,req.user.id)
+                let partagedLists = await service.dao.getByListIdAndUserAccountId(undefined ,req.user.id)
 
                 for(let partagedList of partagedLists){
                     partagedList.list = await serviceList.dao.getById(partagedList.id_list)
+                }
+                if(req.query.just_list !== undefined){
+                    partagedLists = utile.array_column(partagedLists, "list")
                 }
                 return res.json(partagedLists)
             }
