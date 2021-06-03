@@ -12,6 +12,9 @@ module.exports = (app, service,serviceUserAccountHasRole,serviceList,serviceUser
 
                 for(let partagedList of partagedLists){
                     partagedList.list = await serviceList.dao.getById(partagedList.id_list)
+                    if(req.query.just_list !== undefined) {
+                        partagedList.list.edit = partagedList.edit
+                    }
                 }
                 if(req.query.just_list !== undefined){
                     partagedLists = utile.array_column(partagedLists, "list")
