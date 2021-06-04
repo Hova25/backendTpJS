@@ -73,7 +73,8 @@ module.exports = (app, service,serviceUserAccountHasRole,serviceList,serviceUser
             partageList.owneruser_id = req.user.id
             service.dao.insert(partageList)
                 .then(_ => {
-                    res.status(200).end()
+                    // res.status(200).end()
+                    return res.json(partageList)
                 })
                 .catch(err => {
                     console.log(err)

@@ -218,6 +218,9 @@ module.exports = (app, service, jwt) => {
             let useraccount = await service.dao.getByPropertyNameAndValue("login",req.params.email, false, false)
             useraccount = useraccount[0]
             useraccount.challenge = undefined
+            // useraccount.confirmation_code = undefined
+            // useraccount.password_code = undefined
+            // useraccount.active = undefined
             return res.json(useraccount)
         }catch (e) {
             res.status(400).end()
