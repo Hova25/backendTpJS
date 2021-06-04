@@ -45,7 +45,7 @@ module.exports = class ItemDao extends BaseDAO {
 
     getByPropertyNameAndValueWithLeftPartageList(propertyName, value, user){
         return new Promise((resolve, reject) =>
-            this.db.query(`SELECT ${this.tablename}.* FROM ${this.tablename} 
+            this.db.query(`SELECT DISTINCT ${this.tablename}.* FROM ${this.tablename} 
             LEFT JOIN partagelist ON partagelist.id_list = ${this.tablename}.id_list
             WHERE
              ${this.tablename}.${propertyName}=$1 AND 
