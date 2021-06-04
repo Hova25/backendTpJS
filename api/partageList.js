@@ -47,6 +47,7 @@ module.exports = (app, service,serviceUserAccountHasRole,serviceList,serviceUser
                         partagedList.useraccount.password_code = undefined
                         partagedList.useraccount.active = undefined
                         if(req.query.just_useraccount !== undefined) {
+                            partagedList.useraccount.id_partage = partagedList.id
                             partagedList.useraccount.edit = partagedList.edit
                         }
                     }
