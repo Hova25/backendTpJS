@@ -71,6 +71,9 @@ module.exports = (app, service,serviceUserAccountHasRole,serviceList,serviceUser
             }
             await utile.verifVipRole(req.user, serviceUserAccountHasRole, res)
             partageList.owneruser_id = req.user.id
+            if(partageList.edit === undefined){
+                partageList.edit = false
+            }
             service.dao.insert(partageList)
                 .then(_ => {
                     // res.status(200).end()
