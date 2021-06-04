@@ -71,7 +71,7 @@ module.exports = (app, service, servicePartageList,serviceAlert,serviceUserAccou
             await utile.verifUserCanCreateList(req.user,service,serviceUserAccountHasRole,res)
 
             service.dao.insert(list)
-                .then(id => res.json(id))
+                .then(_ => res.json(list))
                 .catch(err => {
                     console.log(err)
                     res.status(500).end()
