@@ -202,9 +202,12 @@ module.exports = (app, service,serviceUseraccountHasRole, jwt) => {
                 const userAccountHasRole = await serviceUseraccountHasRole.dao.getRolesByIdUserAccount(req.user.id,3)//
                 if(userAccountHasRole.length>0){
                     res.json({"id":req.user.id,"displayname":req.user.displayname,"login":req.user.login, "subscriber":true})
+                }else{
+                    res.json({"id":req.user.id,"displayname":req.user.displayname,"login":req.user.login, "subscriber":false})
                 }
+            }else{
+                res.json({"id":req.user.id,"displayname":req.user.displayname,"login":req.user.login})
             }
-            res.json({"id":req.user.id,"displayname":req.user.displayname,"login":req.user.login})
 
         }else{
             res.status(400).end()
