@@ -1,7 +1,7 @@
 const UserAccount = require("../datamodel/model/userAccount")
 const utile = require('./utile')()
 
-module.exports = (app, service, jwt) => {
+module.exports = (app, service,serviceUseraccountHasRole, jwt) => {
     function validatePassword(res, req, login, password){
         service.validatePassword(login,password)
             .then(authenticated => {
@@ -196,9 +196,16 @@ module.exports = (app, service, jwt) => {
             return
         }
     })
-    app.get('/useraccount/myaccount', jwt.validateJWT, (req,res)=>{
+    app.get('/useraccount/myaccount', jwt.validateJWT,async (req,res)=>{
         if(req.user!==undefined || req.user!==null){
+            if(req.query.getSubscription!==undefined){
+                const userAccountHasRole = await serviceUseraccountHasRole.dao.getRolesByIdUserAccount(req.user.id,3)//
+                if(userAccountHasRole.length>0){
+                    res.json({"id":req.user.id,"displayname":req.user.displayname,"login":req.user.login, "subscriber":true})
+                }
+            }
             res.json({"id":req.user.id,"displayname":req.user.displayname,"login":req.user.login})
+
         }else{
             res.status(400).end()
             return
