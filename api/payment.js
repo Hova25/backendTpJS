@@ -19,7 +19,7 @@ module.exports = (app, service,serviceUserAccountHasRole, serviceAlert, jwt) => 
                         await serviceUserAccountHasRole.dao.insert(new UseraccountHasRole(3,req.user.id))
                         await serviceAlert.dao.insert(new Alert(req.user.id, "Enfin abonné !", `Toute l'équipe de myShopList vous remercie ${req.user.displayname} de votre confiance ainsin que votre soutien !`))
                     }
-                    res.status(200).end()
+                    res.json(payment)
                 })
                 .catch(err => {
                     console.log(err)
