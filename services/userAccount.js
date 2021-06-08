@@ -21,6 +21,9 @@ module.exports = class UserAccountService{
 
     async validatePassword(login, password){
         const user = await this.dao.getByLogin(login)
+        if(user===undefined){
+            return false
+        }
         return this.comparePassword(password, user.challenge)
     }
 
