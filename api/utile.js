@@ -42,7 +42,7 @@ module.exports = () => {
         async insertAlertModificationList(id_list,current_user,listService, alertService,Alert){
             let list = await listService.dao.getById(id_list)
             const text = `Votre liste : ${list.shop} a été modifié par ${current_user.displayname}`
-            const alert = await alertService.dao.getByTextAndCheckedFalseAndUserAccountId(text,list.useraccount_id)
+            const alert = await alertService.dao.getByTextAndCheckedFalseAndUserAccountId(text,list.useraccount_id,false)
             if(list.useraccount_id !== current_user.id && alert.length === 0 ) {
                 await alertService.dao.insert(new Alert(list.useraccount_id, `Une liste a été modifié `, text))
             }
