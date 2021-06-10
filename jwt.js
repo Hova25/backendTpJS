@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken')
 const jwtKey = 'myshoplist secret key'
-const jwtExpiryTokenSeconds = 3600
+const jwtExpiryTokenSeconds = 3600*4  // 4h
 const refreshJwtExpiryTokenSeconds = 86400
 
 module.exports = (userAccountService, userAccountHasRoleService) => {
