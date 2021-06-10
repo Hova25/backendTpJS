@@ -48,7 +48,7 @@ module.exports = () => {
             }
         },
         async insertAlertExpireList(list,listService, alertService,Alert){
-            const text = `Votre liste : ${list.shop} a périmé. Vous pouvez la supprimer ou l'archivé !`
+            const text = `Votre liste : ${list.shop} a périmé. Vous pouvez la supprimer ou l'archiver !`
             const alert = await alertService.dao.getByTextAndCheckedFalseAndUserAccountId(text,list.useraccount_id)
             if(alert.length === 0 ) {
                 await alertService.dao.insert(new Alert(list.useraccount_id, `Une liste a périmé `, text))
